@@ -2049,7 +2049,7 @@ Google Chrome을 사용하여 탐색:
 
 	if list_webviewClient :
 		writer.startWriter("SSL_WEBVIEW", LEVEL_CRITICAL, "SSL 구현 검사(WebView위한 WebViewClient)", 
-			"""SSL 인증서가 잘못된 경우에도 연결을 허용하는 확장 "WebViewClient"의 메서드 내에서 "handler.proceed(;)"를 사용하지 마십시오(MITM 취약성).
+			"""SSL 인증서가 잘못된 경우에도 연결을 허용하는 확장 "WebViewClient"의 메서드 내에서 "handler.proceed();"를 사용하지 마십시오(MITM 취약성).
 참조:
 (1)WebView 공격: https://www.iseclab.org/papers/webview_leet13.pdf 
 (2)OWASP Mobile Top 10 문서: https://www.owasp.org/index.php/Mobile_Top_10_2014-M3
@@ -2188,16 +2188,16 @@ Google Chrome을 사용하여 탐색:
 
 		if path_SQLiteDatabase_beginTransactionNonExclusive :
 			output_string = StringHandler()
-			output_string.append("We detect you're using \"beginTransactionNonExclusive\" in your \"SQLiteDatabase\" but your minSdk supports down to " + str(int_min_sdk) + ".")
-			output_string.append("\"beginTransactionNonExclusive\" is not supported by API < 11. Please make sure you use \"beginTransaction\" in the earlier version of Android.")
-			output_string.append("Reference: http://developer.android.com/reference/android/database/sqlite/SQLiteDatabase.html#beginTransactionNonExclusive()")
-			writer.startWriter("DB_DEPRECATED_USE1", LEVEL_CRITICAL, "SQLiteDatabase Transaction Deprecated Checking", output_string.get(), ["Database"])
+			output_string.append("\"SQLiteDatabase\"에서 \"beginTransactionNonExclusive\"를 사용 중이지만 minSdk는 " + str(int_min_sdk) + "아래를 지원합니다.")
+			output_string.append("\"beginTransactionNonExclusive\"는 API < 11에서 지원되지 않습니다. 이전 버전의 Android에서 \"beginTransaction\"을 사용해야 합니다.")
+			output_string.append("참조: http://developer.android.com/reference/android/database/sqlite/SQLiteDatabase.html#beginTransactionNonExclusive()")
+			writer.startWriter("DB_DEPRECATED_USE1", LEVEL_CRITICAL, "SQLiteDatabase Transaction 반대 검사", output_string.get(), ["Database"])
 
 			writer.show_Paths(d, path_SQLiteDatabase_beginTransactionNonExclusive)
 		else:
-			writer.startWriter("DB_DEPRECATED_USE1", LEVEL_INFO, "SQLiteDatabase Transaction Deprecated Checking", "Ignore checking \"SQLiteDatabase:beginTransactionNonExclusive\" you're not using it.", ["Database"])
+			writer.startWriter("DB_DEPRECATED_USE1", LEVEL_INFO, "SQLiteDatabase Transaction 반대 검사", "\"SQLiteDatabase:beginTransactionNonExclusive\"을 사용하고 있지 않습니다.", ["Database"])
 	else:
-		writer.startWriter("DB_DEPRECATED_USE1", LEVEL_INFO, "SQLiteDatabase Transaction Deprecated Checking", "Ignore checking \"SQLiteDatabase:beginTransactionNonExclusive\" because your set minSdk >= 11.", ["Database"])
+		writer.startWriter("DB_DEPRECATED_USE1", LEVEL_INFO, "SQLiteDatabase Transaction 반대 검사", "설정된 minSdk > = 11이므로 \"SQLiteDatabase:beginTransactionNonExclusive\" 검사를 무시합니다.", ["Database"])
 
 	# ------------------------------------------------------------------------
 
@@ -2258,8 +2258,8 @@ Google Chrome을 사용하여 탐색:
 
 	if list_path_openOrCreateDatabase or list_path_openOrCreateDatabase2 or list_path_getDir or list_path_getSharedPreferences or list_path_openFileOutput:
 
-		writer.startWriter("MODE_WORLD_READABLE_OR_MODE_WORLD_WRITEABLE", LEVEL_CRITICAL, "App Sandbox Permission Checking", 
-			"Security issues \"MODE_WORLD_READABLE\" or \"MODE_WORLD_WRITEABLE\" found (Please check: https://www.owasp.org/index.php/Mobile_Top_10_2014-M2):")
+		writer.startWriter("MODE_WORLD_READABLE_OR_MODE_WORLD_WRITEABLE", LEVEL_CRITICAL, "App Sandbox Permission 검사", 
+			"보안 문제 \"MODE_WORLD_READABLE\" 또는 \"MODE_WORLD_WRITEABLE\"이(가) 발견되었습니다(참조: https://www.owasp.org/index.php/Mobile_Top_10_2014-M2):")
 
 		if list_path_openOrCreateDatabase:
 			writer.write("[openOrCreateDatabase - 3 params]")
@@ -2288,8 +2288,8 @@ Google Chrome을 사용하여 탐색:
 			writer.write("--------------------------------------------------")
 
 	else:
-		writer.startWriter("MODE_WORLD_READABLE_OR_MODE_WORLD_WRITEABLE", LEVEL_INFO, "App Sandbox Permission Checking", 
-			"No security issues \"MODE_WORLD_READABLE\" or \"MODE_WORLD_WRITEABLE\" found on 'openOrCreateDatabase' or 'openOrCreateDatabase2' or 'getDir' or 'getSharedPreferences' or 'openFileOutput'")
+		writer.startWriter("MODE_WORLD_READABLE_OR_MODE_WORLD_WRITEABLE", LEVEL_INFO, "App Sandbox Permission 검사", 
+			"'openOrCreateDatabase', 'openOrCreateDatabase2', 'getDir', 'getSharedPreferences', 'openFileOutput'에서 보안 문제 \"MODE_WORLD_WRITETABLE\"를 찾을 수 없습니다.")
 
 	# ------------------------------------------------------------------------
 	#List all native method
@@ -2320,13 +2320,13 @@ Google Chrome을 사용하여 탐색:
 		list_NDK_library_classname_to_ndkso_mapping.append([toNdkFileFormat(str(i.getResult()[0])), i.getPath()])
 
 	if list_NDK_library_classname_to_ndkso_mapping:
-		writer.startWriter("NATIVE_LIBS_LOADING", LEVEL_NOTICE, "Native Library Loading Checking", "Native library loading codes(System.loadLibrary(...)) found:")
+		writer.startWriter("NATIVE_LIBS_LOADING", LEVEL_NOTICE, "기본 라이브러리 로드 검사", "네이티브 라이브러리 로드 코드(System.loadLibrary(...))가 발견되었습니다.:")
 
 		for ndk_location , path in list_NDK_library_classname_to_ndkso_mapping:
 			writer.write("[" + ndk_location + "]")
 			writer.show_Path(d, path)
 	else:
-		writer.startWriter("NATIVE_LIBS_LOADING", LEVEL_INFO, "Native Library Loading Checking", "No native library loaded.")
+		writer.startWriter("NATIVE_LIBS_LOADING", LEVEL_INFO, "기본 라이브러리 로드 검사", "로드된 기본 라이브러리가 없습니다.")
 
 	dic_native_methods = {}
 	regexp_sqlcipher_database_class = re.compile(".*/SQLiteDatabase;")
@@ -2349,20 +2349,20 @@ Google Chrome을 사용하여 탐색:
 
 			dic_native_methods_sorted = collections.OrderedDict(sorted(dic_native_methods.items()))
 
-			writer.startWriter("NATIVE_METHODS", LEVEL_NOTICE, "Native Methods Checking", "Native methods found:")
+			writer.startWriter("NATIVE_METHODS", LEVEL_NOTICE, "기본 메서드 검사", "발견된 네이티브 메서드:")
 
 			for class_name, method_names in dic_native_methods_sorted.items():
 				if class_name in dic_NDK_library_classname_to_ndkso_mapping:
-					writer.write("Class: %s (Loaded NDK files: %s)" % (class_name, dic_NDK_library_classname_to_ndkso_mapping[class_name]))
+					writer.write("Class: %s (로드된 NDK 파일: %s)" % (class_name, dic_NDK_library_classname_to_ndkso_mapping[class_name]))
 				else:
 					writer.write("Class: %s" % (class_name))
-				writer.write("   ->Methods:")
+				writer.write("   ->메서드:")
 				for method in method_names:
 					writer.write("        %s%s" % (method.get_name(), method.get_descriptor()))
 
 	else:
 		if args.extra == 2 : #The output may be too verbose, so make it an option
-			writer.startWriter("NATIVE_METHODS", LEVEL_INFO, "Native Methods Checking", "No native method found.")
+			writer.startWriter("NATIVE_METHODS", LEVEL_INFO, "기본 메서드 검사", "네이티브 메서드를 찾을 수 없습니다.")
 
 	#Framework Detection: Bangcle
 
@@ -2397,16 +2397,16 @@ Google Chrome을 사용하여 탐색:
 					break
 
 		if is_using_Framework_Bangcle :
-			writer.startWriter("FRAMEWORK_BANGCLE", LEVEL_NOTICE, "Encryption Framework - Bangcle", 
-				"This app is using Bangcle Encryption Framework (http://www.bangcle.com/). Please send your unencrypted apk instead so that we can check thoroughly.", ["Framework"])
+			writer.startWriter("FRAMEWORK_BANGCLE", LEVEL_NOTICE, "암호화 프레임워크 - Bangcle", 
+				"이 앱은 Bangcle 암호화 프레임워크(http://www.bangcle.com/)를 사용하고 있습니다.", ["Framework"])
 		if is_using_Framework_ijiami :
-			writer.startWriter("FRAMEWORK_IJIAMI", LEVEL_NOTICE, "Encryption Framework - Ijiami", 
-				"This app is using Ijiami Encryption Framework (http://www.ijiami.cn/). Please send your unencrypted apk instead so that we can check thoroughly.", ["Framework"])
+			writer.startWriter("FRAMEWORK_IJIAMI", LEVEL_NOTICE, "암호화 프레임워크 - Ijiami", 
+				"이 앱은 Ijiami 암호화 프레임워크(http://www.ijiami.cn/)를 사용하고 있습니다.", ["Framework"])
 	
 	if is_using_Framework_MonoDroid :
-		writer.startWriter("FRAMEWORK_MONODROID", LEVEL_NOTICE, "Framework - MonoDroid", "This app is using MonoDroid Framework (http://xamarin.com/android).", ["Framework"])
+		writer.startWriter("FRAMEWORK_MONODROID", LEVEL_NOTICE, "암호화 프레임워크 - MonoDroid", "이 앱은 MonoDroid 암호화 프레임워크(http://xamarin.com/android)를 사용하고 있습니다.", ["Framework"])
 	else :
-		writer.startWriter("FRAMEWORK_MONODROID", LEVEL_INFO, "Framework - MonoDroid", "This app is NOT using MonoDroid Framework (http://xamarin.com/android).", ["Framework"])
+		writer.startWriter("FRAMEWORK_MONODROID", LEVEL_INFO, "암호화 프레임워크 - MonoDroid", " 앱은 MonoDroid 암호화 프레임워크(http://xamarin.com/android)를 사용하고 있지 않습니다.", ["Framework"])
 
 	# ------------------------------------------------------------------------
 	#Detect dynamic code loading
@@ -2414,10 +2414,10 @@ Google Chrome을 사용하여 탐색:
 	paths_DexClassLoader = vmx.get_tainted_packages().search_methods( "Ldalvik/system/DexClassLoader;", ".", ".")
 	paths_DexClassLoader = filteringEngine.filter_list_of_paths(d, paths_DexClassLoader)
 	if paths_DexClassLoader:
-		writer.startWriter("DYNAMIC_CODE_LOADING", LEVEL_WARNING, "Dynamic Code Loading", "Dynamic code loading(DexClassLoader) found:")
+		writer.startWriter("DYNAMIC_CODE_LOADING", LEVEL_WARNING, "동적 코드 로딩", "동적 코드 로드(DexClassLoader)가 발견되었습니다.")
 		writer.show_Paths(d, paths_DexClassLoader)
 	else:
-		writer.startWriter("DYNAMIC_CODE_LOADING", LEVEL_INFO, "Dynamic Code Loading", "No dynamic code loading(DexClassLoader) found.")
+		writer.startWriter("DYNAMIC_CODE_LOADING", LEVEL_INFO, "동적 코드 로딩", "동적 코드 로드(DexClassLoader)가 발견되지 않았습니다.")
 
 
 	# ------------------------------------------------------------------------
@@ -2426,10 +2426,10 @@ Google Chrome을 사용하여 탐색:
 	paths_ExternalStorageAccess = vmx.get_tainted_packages().search_class_methods_exact_match("Landroid/os/Environment;", "getExternalStorageDirectory", "()Ljava/io/File;")
 	paths_ExternalStorageAccess = filteringEngine.filter_list_of_paths(d, paths_ExternalStorageAccess)
 	if paths_ExternalStorageAccess:
-		writer.startWriter("EXTERNAL_STORAGE", LEVEL_WARNING, "External Storage Accessing", "External storage access found (Remember DO NOT write important files to external storages):")
+		writer.startWriter("EXTERNAL_STORAGE", LEVEL_WARNING, "외부 스토리지 액세스", "외부 스토리지 액세스 발견(외부 스토리지에 중요한 파일을 쓰지 마십시오):")
 		writer.show_Paths(d, paths_ExternalStorageAccess)
 	else:
-		writer.startWriter("EXTERNAL_STORAGE", LEVEL_INFO, "External Storage Accessing", "External storage access not found.")
+		writer.startWriter("EXTERNAL_STORAGE", LEVEL_INFO, "외부 스토리지 액세스", "외부 스토리지 액세스를 찾을 수 없습니다.")
 
 	# ------------------------------------------------------------------------
 	#Android Fragment Vulnerability (prior to Android 4.4)
@@ -2477,8 +2477,8 @@ Google Chrome을 사용하여 탐색:
 
 	if list_Fragment_vulnerability_NonMethod_classes or list_Fragment_vulnerability_Method_OnlyReturnTrue_methods or list_Fragment_vulnerability_Method_NoIfOrSwitch_methods:
 		
-		output_string = """'Fragment' or 'Fragment for ActionbarSherlock' has a severe vulnerability prior to Android 4.4 (API 19). 
-Please check: 
+		output_string = """'Fragment' 혹은 'Fragment for ActionbarSherlock'는 안드로이드 4.4(API 19) 이전 버전에는 심각한 취약점이 있습니다. 
+참조: 
 (1)http://developer.android.com/reference/android/os/Build.VERSION_CODES.html#KITKAT 
 (2)http://developer.android.com/reference/android/preference/PreferenceActivity.html#isValidFragment(java.lang.String) 
 (3)http://stackoverflow.com/questions/19973034/isvalidfragment-android-api-19 
@@ -2486,39 +2486,39 @@ Please check:
 (5)http://securityintelligence.com/wp-content/uploads/2013/12/android-collapses-into-fragments.pdf 
 (6)https://cureblog.de/2013/11/cve-2013-6271-remove-device-locks-from-android-phone/ """
 
-		writer.startWriter("FRAGMENT_INJECTION", LEVEL_CRITICAL, "Fragment Vulnerability Checking", output_string, None, "BID 64208, CVE-2013-6271")
+		writer.startWriter("FRAGMENT_INJECTION", LEVEL_CRITICAL, "Fragment 취약성 검사", output_string, None, "BID 64208, CVE-2013-6271")
 
 		if list_Fragment_vulnerability_NonMethod_classes:
 			if int_target_sdk >= 19:
 				#You must override. Otherwise, it always throws Exception
-				writer.write("You MUST override 'isValidFragment' method in every \"PreferenceActivity\" class to avoid Exception throwing in Android 4.4:")
+				writer.write("Android 4.4에서 예외 발생을 방지하려면 모든 \"PreferenceActivity\" 클래스에서 'isValidFragment' 메서드를 재정의해야 합니다.")
 				for i in list_Fragment_vulnerability_NonMethod_classes: #Notice: Each element in the list is NOT method, but String
 					writer.write("    " + i)
 			else:
 				#You must override. Otherwise, it always throws Exception
-				writer.write("These \"PreferenceActivity\" classes may be vulnerable because they do not override 'isValidFragment' method (If you do not load any fragment in the PreferenceActivity, please still override 'isValidFragment' method and only return \"false\" to secure your app in the future changes) :")
+				writer.write("\"PreferenceActivity\" 클래스는 'isValidFragment' 메서드를 재정의하지 않으므로 취약할 수 있습니다(기본 설정 활동에 조각을 로드하지 않은 경우에도 'isValidFragment' 메서드를 재정의하고 이후 변경 시 앱을 보호하려면 \"false\"만 반환하십시오).")
 				for i in list_Fragment_vulnerability_NonMethod_classes: #Notice: Each element in the list is NOT method, but String
 					writer.write("    " + i)
 
 		if list_Fragment_vulnerability_Method_OnlyReturnTrue_methods:
-			writer.write("You override 'isValidFragment' and only return \"true\" in those classes. You should use \"if\" condition to check whether the fragment is valid:")
-			writer.write("(Example code: http://stackoverflow.com/questions/19973034/isvalidfragment-android-api-19/20139823#20139823)")
+			writer.write("'isValidFragment'를 재정의하고 해당 클래스에서 \"true\"만 반환합니다. 조각의 유효 여부를 확인하려면 \"if\" 조건을 사용해야 합니다.")
+			writer.write("(예시 코드: http://stackoverflow.com/questions/19973034/isvalidfragment-android-api-19/20139823#20139823)")
 			for method in list_Fragment_vulnerability_Method_OnlyReturnTrue_methods:
 				writer.write("    " + method.easy_print())
 
 		if list_Fragment_vulnerability_Method_NoIfOrSwitch_methods:
-			writer.write("Please make sure you check the valid fragment inside the overridden 'isValidFragment' method:")
+			writer.write("재정의된 'isValidFragment' 메서드 내에서 올바른 Fragment을 확인하십시오.")
 			for method in list_Fragment_vulnerability_Method_NoIfOrSwitch_methods:
 				writer.write("    " + method.easy_print())
 
 		if list_Fragment:
-			writer.write("All of the potential vulnerable \"fragment\":")
+			writer.write("모든 잠재적인 취약점 \"Fragment\":")
 			for i in list_Fragment:
 				writer.write("    " + i)
 
 	else:
-		writer.startWriter("FRAGMENT_INJECTION", LEVEL_INFO, "Fragment Vulnerability Checking", 
-			"Did not detect the vulnerability of \"Fragment\" dynamically loading into \"PreferenceActivity\" or \"SherlockPreferenceActivity\"", None, "BID 64208, CVE-2013-6271")
+		writer.startWriter("FRAGMENT_INJECTION", LEVEL_INFO, "Fragment 취약성 검사", 
+			"\"Fragment\"가 \"Preference Activity\" 또는 \"Sharlock Preference Activity\"에 동적으로 로드되는 취약성을 감지하지 못했습니다.", None, "BID 64208, CVE-2013-6271")
 
 	# ------------------------------------------------------------------------
 	#Find all "dangerous" permission
@@ -2539,12 +2539,12 @@ Please check:
 
 	if dangerous_custom_permissions :
 
-		writer.startWriter("PERMISSION_DANGEROUS", LEVEL_CRITICAL, "AndroidManifest Dangerous ProtectionLevel of Permission Checking",
-			"""The protection level of the below classes is "dangerous", allowing any other apps to access this permission (AndroidManifest.xml). 
-The app should declare the permission with the "android:protectionLevel" of "signature" or "signatureOrSystem" so that other apps cannot register and receive message for this app. 
-android:protectionLevel="signature" ensures that apps with request a permission must be signed with same certificate as the application that declared the permission. 
-Please check some related cases: http://www.wooyun.org/bugs/wooyun-2010-039697  
-Please change these permissions:""")
+		writer.startWriter("PERMISSION_DANGEROUS", LEVEL_CRITICAL, "AndroidManifest 위험한 권한의 보호수준 검사",
+			"""다음 클래스의 보호 수준은 "위험"하므로 다른 앱이 이 권한(AndroidManifest.xml)에 액세스할 수 있습니다. 
+앱에서 "Android:protection"을 사용하여 권한을 선언해야 합니다."signature" 또는 "signatureOrSystem"의 수준"을 지정하여 다른 앱이 이 앱에 대한 메시지를 등록하고 받을 수 없도록 합니다. 
+Android:protectionLevel="signature"는 권한을 요청한 앱이 권한을 선언한 애플리케이션과 동일한 인증서로 서명되어야 함을 보장합니다. 
+일부 관련 사례를 확인하십시오.: http://www.wooyun.org/bugs/wooyun-2010-039697  
+다음 권한을 변경하십시오.:""")
 
 		for class_name in dangerous_custom_permissions :
 			writer.write(class_name)
@@ -2554,10 +2554,10 @@ Please change these permissions:""")
 			if who_use_this_permission :
 				for key, valuelist in who_use_this_permission.items() :
 					for list_item in valuelist:
-						writer.write("    -> used by (" + key + ") " + a.format_value(list_item))
+						writer.write("    -> used by (" + key + ")" + a.format_value(list_item))
 	else :
-		writer.startWriter("PERMISSION_DANGEROUS", LEVEL_INFO, "AndroidManifest Dangerous ProtectionLevel of Permission Checking",
-			"No \"dangerous\" protection level customized permission found (AndroidManifest.xml).")
+		writer.startWriter("PERMISSION_DANGEROUS", LEVEL_INFO, "AndroidManifest 위험한 권한의 보호수준 검사",
+			"\"위험한\" 보호 수준 사용자 지정 사용 권한을 찾을 수 없습니다(AndroidManifest.xml).")
 
 
 	# ------------------------------------------------------------------------
@@ -2569,11 +2569,11 @@ Please change these permissions:""")
 			normal_or_default_custom_permissions.append(name)
 
 	if normal_or_default_custom_permissions :
-		writer.startWriter("PERMISSION_NORMAL", LEVEL_WARNING, "AndroidManifest Normal ProtectionLevel of Permission Checking",
-			"""The protection level of the below classes is "normal" or default (AndroidManifest.xml). 
-The app should declare the permission with the "android:protectionLevel" of "signature" or "signatureOrSystem" so that other apps cannot register and receive message for this app. 
-android:protectionLevel="signature" ensures that apps with request a permission must be signed with same certificate as the application that declared the permission. 
-Please make sure these permission are all really need to be exported or otherwise change to "signature" or "signatureOrSystem" protection level.""")
+		writer.startWriter("PERMISSION_NORMAL", LEVEL_WARNING, "AndroidManifest 일반 권한의 보호수준 검사",
+			"""다음 클래스의 보호 수준은 "일반" 또는 기본값입니다(AndroidManifest.xml). 
+앱에서 "Android:protection"을 사용하여 권한을 선언해야 합니다."signature" 또는 "signatureOrSystem"의 수준"을 지정하여 다른 앱이 이 앱에 대한 메시지를 등록하고 받을 수 없도록 합니다. 
+Android:protectionLevel="signature"는 권한을 요청한 앱이 권한을 선언한 애플리케이션과 동일한 인증서로 서명되어야 함을 보장합니다. 
+이러한 권한을 모두 내보내거나 "signature" 또는 "signatureOrSystem" 보호 수준으로 변경해야 합니다.""")
 		for class_name in normal_or_default_custom_permissions :
 			writer.write(class_name)
 			who_use_this_permission = get_all_components_by_permission(a.get_AndroidManifest(), class_name)
@@ -2583,8 +2583,8 @@ Please make sure these permission are all really need to be exported or otherwis
 					for list_item in valuelist:
 						writer.write("    -> used by (" + key + ") " + a.format_value(list_item))
 	else :
-		writer.startWriter("PERMISSION_NORMAL", LEVEL_INFO, "AndroidManifest Normal ProtectionLevel of Permission Checking",
-			"No default or \"normal\" protection level customized permission found (AndroidManifest.xml).")
+		writer.startWriter("PERMISSION_NORMAL", LEVEL_INFO, "AndroidManifest 일반 권한의 보호수준 검사",
+			"기본 또는 \"기본\" 보호 수준 사용자 지정 사용 권한을 찾을 수 없습니다(AndroidManifest.xml).")
 
 	# ------------------------------------------------------------------------
 
@@ -2601,9 +2601,9 @@ Please make sure these permission are all really need to be exported or otherwis
 				list_lost_exported_components.append( (tag, name) )
 
 	if list_lost_exported_components :
-		writer.startWriter("PERMISSION_NO_PREFIX_EXPORTED", LEVEL_CRITICAL, "AndroidManifest Exported Lost Prefix Checking",
-			"""Found exported components that forgot to add "android:" prefix (AndroidManifest.xml). 
-Related Cases: (1)http://blog.curesec.com/article/blog/35.html
+		writer.startWriter("PERMISSION_NO_PREFIX_EXPORTED", LEVEL_CRITICAL, "AndroidManifest 손실 접두사 검사",
+			""""android:" 접두사(AndroidManifest.xml)를 추가하지 않은 내보낸 구성 요소를 찾았습니다. 
+참조: (1)http://blog.curesec.com/article/blog/35.html
                (2)http://safe.baidu.com/2014-07/cve-2013-6272.html
                (3)http://blogs.360.cn/360mobile/2014/07/08/cve-2013-6272/""", None, "CVE-2013-6272")
 
@@ -2611,8 +2611,8 @@ Related Cases: (1)http://blog.curesec.com/article/blog/35.html
 			writer.write(("%10s => %s") % (tag, a.format_value(name)))
 
 	else :
-		writer.startWriter("PERMISSION_NO_PREFIX_EXPORTED", LEVEL_INFO, "AndroidManifest Exported Lost Prefix Checking",
-			"No exported components that forgot to add \"android:\" prefix.", None, "CVE-2013-6272")
+		writer.startWriter("PERMISSION_NO_PREFIX_EXPORTED", LEVEL_INFO, "AndroidManifest 손실 접두사 검사",
+			"\"android:\"에 접두사를 추가하지 않은 내보낸 구성 요소가 없습니다.", None, "CVE-2013-6272")
 
 	# ------------------------------------------------------------------------
 	
