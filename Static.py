@@ -2759,7 +2759,7 @@ Android:protectionLevel="signature"는 권한을 요청한 앱이 권한을 선�
 				if (is_ready_to_check) and (not is_launcher) :
 					list_ready_to_check.append( (tag, a.format_value(name), exported, permission, has_any_non_google_actions, has_any_actions_in_intent_filter, isSyncAdapterService) )
 	# ------------------------------------------------------------------------
-	#CHECK procedure
+#CHECK procedure
 	list_implicit_service_components = []
 
 	list_alerting_exposing_components_NonGoogle = []
@@ -2795,23 +2795,23 @@ Android:protectionLevel="signature"는 권한을 요청한 앱이 권한을 선�
 
 	if list_alerting_exposing_components_NonGoogle or list_alerting_exposing_components_Google :
 		if list_alerting_exposing_components_NonGoogle:
-			writer.startWriter("PERMISSION_EXPORTED", LEVEL_WARNING, "AndroidManifest Exported Components Checking",
-				"""Found "exported" components(except for Launcher) for receiving outside applications' actions (AndroidManifest.xml). 
-These components can be initilized by other apps. You should add or modify the attribute to [exported="false"] if you don't want to. 
-You can also protect it with a customized permission with "signature" or higher protectionLevel and specify in "android:permission" attribute.""")
+			writer.startWriter("PERMISSION_EXPORTED", LEVEL_WARNING, "AndroidManifest Exported Components 검사",
+				"""외부 애플리케이션의 작업(AndroidManifest.xml)을 수신하기 위해 "exported" 구성 요소(런처 제외)를 찾았습니다.
+이러한 구성 요소는 다른 앱에서 초기화할 수 있습니다. 원하지 않는 경우 속성을 [exported="false"]에 추가하거나 수정해야 합니다.
+"signature" 이상의 protectionLevel을 사용하여 사용자 지정 권한으로 보호하고 "android:permission" 속성에 지정할 수도 있습니다.""")
 
 			for i in list_alerting_exposing_components_NonGoogle:
 				writer.write(("%10s => %s") % (i[0], i[1]))
 
 		if list_alerting_exposing_components_Google:
-			writer.startWriter("PERMISSION_EXPORTED_GOOGLE", LEVEL_NOTICE, "AndroidManifest Exported Components Checking 2",
-				"Found \"exported\" components(except for Launcher) for receiving Google's \"Android\" actions (AndroidManifest.xml):")
+			writer.startWriter("PERMISSION_EXPORTED_GOOGLE", LEVEL_NOTICE, "AndroidManifest Exported Components 검사 2",
+				"Google의 \"Android\" actions(AndroidManifest.xml)을 수신하기 위해 \"exported\" 구성요소(런처 제외)를 찾았습니다.:")
 
 			for i in list_alerting_exposing_components_Google:
 				writer.write(("%10s => %s") % (i[0], i[1]))
 	else :
-		writer.startWriter("PERMISSION_EXPORTED", LEVEL_INFO, "AndroidManifest Exported Components Checking",
-			"No exported components(except for Launcher) for receiving Android or outside applications' actions (AndroidManifest.xml).")
+		writer.startWriter("PERMISSION_EXPORTED", LEVEL_INFO, "AndroidManifest Exported Components 검사",
+			"Android 또는 외부 애플리케이션의 작업(AndroidManifest.xml)을 수신하기 위해 내보낸 구성 요소(런처 제외)가 없습니다.")
 
 	# ------------------------------------------------------------------------
 	#"exported" checking (provider):
@@ -2872,17 +2872,17 @@ You can also protect it with a customized permission with "signature" or higher 
 	if list_alerting_exposing_providers or list_alerting_exposing_providers_no_exported_setting:
 		if list_alerting_exposing_providers_no_exported_setting :   #providers that Did not set exported
 
-			writer.startWriter("PERMISSION_PROVIDER_IMPLICIT_EXPORTED", LEVEL_CRITICAL, "AndroidManifest ContentProvider Exported Checking",
-				"""We strongly suggest you explicitly specify the "exported" attribute (AndroidManifest.xml). 
-For Android "android:targetSdkVersion" < 17, the exported value of ContentProvider is "true" by default. 
-For Android "android:targetSdkVersion" >= 17, the exported value of ContentProvider is "false" by default. 
-Which means if you do not explicitly set the "android:exported", you will expose your ContentProvider to Android < 4.2 devices. 
-Even if you set the provider the permission with [protectionalLevel="normal"], other apps still cannot access it on Android >= 4.2 devices because of the default constraint. 
-Please make sure to set exported to "true" if you initially want other apps to use it (including protected by "signature" protectionalLevel), and set to "false" if your do not want to. 
-Please still specify the "exported" to "true" if you have already set the corresponding "permission", "writePermission" or "readPermission" to "signature" protectionLevel or higher
-because other apps signed by the same signature in Android >= 4.2 devices cannot access it.
-Reference: http://developer.android.com/guide/topics/manifest/provider-element.html#exported
-Vulnerable ContentProvider Case Example: 
+			writer.startWriter("PERMISSION_PROVIDER_IMPLICIT_EXPORTED", LEVEL_CRITICAL, "AndroidManifest ContentProvider Exported 검사",
+				""""exported" 된 속성(AndroidManifest.xml)을 명시적으로 지정하는 것이 좋습니다.
+Android "android:targetSdkVersion" < 17의 경우 ContentProvider의 내보낸 값은 기본적으로 "true"입니다.
+Android "android:targetSdkVersion" >= 17의 경우 ContentProvider의 내보낸 값은 기본적으로 "false"입니다.
+즉, "android:exported"를 명시적으로 설정하지 않으면 ContentProvider가 Android < 4.2 기기에 노출됩니다.
+공급자 권한을 [protectionalLevel="normal"]로 설정하더라도 기본 제약 조건으로 인해 Android >= 4.2 기기에서 다른 앱은 여전히 ​​액세스할 수 없습니다.
+처음에 다른 앱에서 사용하도록 하려면 내보내기를 "true"로 설정하고("signature" protectionalLevel에 의해 보호됨 포함) 사용하지 않으려면 "false"로 설정하십시오.
+이미 해당 "permission", "writePermission" 또는 "readPermission"을 "signature" protectionLevel 이상으로 설정했다면 "exported"를 "true"로 지정하십시오.
+Android >= 4.2 기기에서 동일한 서명으로 서명된 다른 앱은 액세스할 수 없기 때문입니다.
+참조: http://developer.android.com/guide/topics/manifest/provider-element.html#exported
+취약한 ContentProvider 예시: 
   (1)https://www.nowsecure.com/mobile-security/ebay-android-content-provider-injection-vulnerability.html
   (2)http://blog.trustlook.com/2013/10/23/ebay-android-content-provider-information-disclosure-vulnerability/
   (3)http://www.wooyun.org/bugs/wooyun-2010-039169
@@ -2893,9 +2893,9 @@ Vulnerable ContentProvider Case Example:
 
 		if list_alerting_exposing_providers:  #provider with "true" exported and not enough permission protected on it
 
-			writer.startWriter("PERMISSION_PROVIDER_EXPLICIT_EXPORTED", LEVEL_CRITICAL, "AndroidManifest ContentProvider Exported Checking",
-				"""Found "exported" ContentProvider, allowing any other app on the device to access it (AndroidManifest.xml). You should modify the attribute to [exported="false"] or set at least "signature" protectionalLevel permission if you don't want to.
-Vulnerable ContentProvider Case Example: 
+			writer.startWriter("PERMISSION_PROVIDER_EXPLICIT_EXPORTED", LEVEL_CRITICAL, "AndroidManifest ContentProvider Exported 검사",
+				""""exported"된 ContentProvider를 찾았으므로 기기의 다른 앱이 액세스할 수 있습니다(AndroidManifest.xml). 속성을 [exported="false"]로 수정하거나 원하지 않는 경우 최소한 "signature" protectionalLevel 권한을 설정해야 합니다.
+취약한 ContentProvider 예시: 
   (1)https://www.nowsecure.com/mobile-security/ebay-android-content-provider-injection-vulnerability.html
   (2)http://blog.trustlook.com/2013/10/23/ebay-android-content-provider-information-disclosure-vulnerability/
   (3)http://www.wooyun.org/bugs/wooyun-2010-039169""")
@@ -2903,8 +2903,8 @@ Vulnerable ContentProvider Case Example:
 				writer.write(("%10s => %s") % ("provider", i[0]))
 
 	else:
-		writer.startWriter("PERMISSION_PROVIDER_IMPLICIT_EXPORTED", LEVEL_INFO, "AndroidManifest ContentProvider Exported Checking",
-			"No exported \"ContentProvider\" found (AndroidManifest.xml).")
+		writer.startWriter("PERMISSION_PROVIDER_IMPLICIT_EXPORTED", LEVEL_INFO, "AndroidManifest ContentProvider Exported 검사",
+			"exported 된 \"ContentProvider\"를 찾을 수 없습니다(AndroidManifest.xml).")
 
 	# ------------------------------------------------------------------------
 	#intent-filter checking:
@@ -2944,40 +2944,40 @@ Vulnerable ContentProvider Case Example:
 
 	if list_wrong_intent_filter_settings or list_no_actions_in_intent_filter :
 		if list_wrong_intent_filter_settings :
-			writer.startWriter("PERMISSION_INTENT_FILTER_MISCONFIG", LEVEL_WARNING, "AndroidManifest \"intent-filter\" Settings Checking",
-				"""Misconfiguration in "intent-filter" of these components (AndroidManifest.xml). 
-Config "intent-filter" should not have "android:exported" or "android:enabled" attribute. 
-Reference: http://developer.android.com/guide/topics/manifest/intent-filter-element.html
+			writer.startWriter("PERMISSION_INTENT_FILTER_MISCONFIG", LEVEL_WARNING, "AndroidManifest \"intent-filter\" Settings 검사",
+				"""이러한 구성요소(AndroidManifest.xml)의 "intent-filter" 구성이 잘못되었습니다.
+"intent-filter" 구성에는 "android:exported" 또는 "android:enabled" 속성이 없어야 합니다.
+참조: http://developer.android.com/guide/topics/manifest/intent-filter-element.html
 """)
 			for tag, name in list_wrong_intent_filter_settings :
 				writer.write(("%10s => %s") % (tag, a.format_value(name)))
 
 		if list_no_actions_in_intent_filter :
-			writer.startWriter("PERMISSION_INTENT_FILTER_MISCONFIG", LEVEL_CRITICAL, "AndroidManifest \"intent-filter\" Settings Checking",
-				"""Misconfiguration in "intent-filter" of these components (AndroidManifest.xml).
-Config "intent-filter" should have at least one "action".
-Reference: http://developer.android.com/guide/topics/manifest/intent-filter-element.html
+			writer.startWriter("PERMISSION_INTENT_FILTER_MISCONFIG", LEVEL_CRITICAL, "AndroidManifest \"intent-filter\" Settings 검사",
+				"""이러한 구성요소(AndroidManifest.xml)의 "intent-filter" 구성이 잘못되었습니다.
+ "intent-filter"에는 하나 이상의 "액션"이 있어야 합니다.
+참조: http://developer.android.com/guide/topics/manifest/intent-filter-element.html
 """)
 			for tag, name in list_no_actions_in_intent_filter :
 				writer.write(("%10s => %s") % (tag, a.format_value(name)))
 	else :
-		writer.startWriter("PERMISSION_INTENT_FILTER_MISCONFIG", LEVEL_INFO, "AndroidManifest \"intent-filter\" Settings Checking",
-			"\"intent-filter\" of AndroidManifest.xml check OK.")
+		writer.startWriter("PERMISSION_INTENT_FILTER_MISCONFIG", LEVEL_INFO, "AndroidManifest \"intent-filter\" Settings 검사",
+			"AndroidManifest.xml의 \"intent-filter\"를 확인했습니다.")
 
 	# ------------------------------------------------------------------------
 	#Implicit Service (** Depend on: "exported" checking (activity, activity-alias, service, receiver) **)
 
 	if list_implicit_service_components :
-		writer.startWriter("PERMISSION_IMPLICIT_SERVICE", LEVEL_CRITICAL, "Implicit Service Checking",
+		writer.startWriter("PERMISSION_IMPLICIT_SERVICE", LEVEL_CRITICAL, "암묵적 서비스 검사",
 			"""앱의 보안을 위해 서비스를 시작할 때 항상 명시적 의도를 사용하고 서비스에 대한 의도 필터를 선언하지 마십시오. 암묵적 의도를 사용하여 서비스를 시작하면 어떤 서비스가 의도에 응답할지 확신할 수 없고 사용자는 어떤 서비스가 시작되는지 볼 수 없기 때문에 보안 위험이 있습니다. 
-참조: http://developer.android.com/guide/components/intents-filters.html#Types""", ["Implicit_Intent"])
+Reference: http://developer.android.com/guide/components/intents-filters.html#Types""", ["Implicit_Intent"])
 
 		for name in list_implicit_service_components :
-			writer.write(("=> %s를 확인하십시오.") % (a.format_value(name)))
+			writer.write(("=> %s") % (a.format_value(name)))
 
 	else :
-		writer.startWriter("PERMISSION_IMPLICIT_SERVICE", LEVEL_INFO, "Implicit Service 검사",
-			"위험한 implicit service가 존재하지 않습니다.", ["Implicit_Intent"])
+		writer.startWriter("PERMISSION_IMPLICIT_SERVICE", LEVEL_INFO, "암묵적 서비스 검사",
+			"위험한 암시적 서비스가 없습니다.", ["Implicit_Intent"])
 
 	# ------------------------------------------------------------------------
 	#SQLite databases
@@ -2985,26 +2985,26 @@ Reference: http://developer.android.com/guide/topics/manifest/intent-filter-elem
 	is_using_android_dbs = vmx.get_tainted_packages().has_android_databases(filteringEngine.get_filtering_regexp())
 	if is_using_android_dbs :
 		if int_min_sdk < 15 :
-			writer.startWriter("DB_SQLITE_JOURNAL", LEVEL_NOTICE, "Android SQLite Databases Vulnerability Checking",
-				"""This app is using Android SQLite databases. 
-Prior to Android 4.0, Android has SQLite Journal Information Disclosure Vulnerability. 
-But it can only be solved by users upgrading to Android > 4.0 and YOU CANNOT SOLVE IT BY YOURSELF (But you can use encrypt your databases and Journals by "SQLCipher" or other libs). 
-Proof-Of-Concept Reference: 
+			writer.startWriter("DB_SQLITE_JOURNAL", LEVEL_NOTICE, "Android SQLite 데이터베이스 취약성 검사",
+				"""이 앱은 Android SQLite 데이터베이스를 사용합니다.
+Android 4.0 이전 버전에서는 SQLite Journal 정보 노출 취약성이 있습니다.
+그러나 안드로이드 > 4.0으로 업그레이드한 사용자만 해결할 수 있으며 혼자 해결할 수 없습니다(단, "SQL Cipher" 또는 다른 lib로 데이터베이스 및 저널 암호화를 사용할 수 있습니다).
+참조:
 (1) http://blog.watchfire.com/files/androidsqlitejournal.pdf 
 (2) http://www.youtube.com/watch?v=oCXLHjmH5rY """, ["Database"], "CVE-2011-3901")
 		else :
-			writer.startWriter("DB_SQLITE_JOURNAL", LEVEL_NOTICE, "Android SQLite Databases Vulnerability Checking",
-				"This app is using Android SQLite databases but it's \"NOT\" suffering from SQLite Journal Information Disclosure Vulnerability.", ["Database"], "CVE-2011-3901")
+			writer.startWriter("DB_SQLITE_JOURNAL", LEVEL_NOTICE, "Android SQLite 데이터베이스 취약성 검사",
+				"이 앱은 Android SQLite 데이터베이스를 사용하고 있습니다. 그러나 SQLite Journal 정보 노출 취약성에 시달리지 않습니다.", ["Database"], "CVE-2011-3901")
 	else :
-		writer.startWriter("DB_SQLITE_JOURNAL", LEVEL_INFO, "Android SQLite Databases Vulnerability Checking",
-			"This app is \"NOT\" using Android SQLite databases.", ["Database"], "CVE-2011-3901")
+		writer.startWriter("DB_SQLITE_JOURNAL", LEVEL_INFO, "Android SQLite 데이터베이스 취약성 검사",
+			"이 앱은 Android SQLite 데이터베이스를 사용하지 않습니다.", ["Database"], "CVE-2011-3901")
 
 	# ------------------------------------------------------------------------
 	#Checking whether the app is using SQLCipher:
 	#Reference to <<Essential_Block_1>>
 	if isUsingSQLCipher :
-		writer.startWriter("DB_SQLCIPHER", LEVEL_NOTICE, "Android SQLite Databases Encryption (SQLCipher)",
-			"This app is using SQLCipher(http://sqlcipher.net/) to encrypt or decrpyt databases.", ["Database"])
+		writer.startWriter("DB_SQLCIPHER", LEVEL_NOTICE, "Android SQLite 데이터베이스 암호화 (SQLCipher)",
+			"이 앱은 SQLCipher(http://sqlcipher.net/)를 사용하여 데이터베이스를 암호화하거나 암호 해독합니다.", ["Database"])
 
 		path_sqlcipher_dbs = vmx.get_tainted_packages().search_sqlcipher_databases()	#Don't do the exclusion checking on this one because it's not needed
 
@@ -3028,8 +3028,8 @@ Proof-Of-Concept Reference:
 				writer.show_Path(d, db_path)
 
 	else :
-		writer.startWriter("DB_SQLCIPHER", LEVEL_INFO, "Android SQLite Databases Encryption (SQLCipher)",
-			"This app is \"NOT\" using SQLCipher(http://sqlcipher.net/) to encrypt or decrpyt databases.", ["Database"])
+		writer.startWriter("DB_SQLCIPHER", LEVEL_INFO, "Android SQLite 데이터베이스 암호화 (SQLCipher)",
+			"이 앱은 SQLCipher(http://sqlcipher.net/)를 사용하여 데이터베이스를 암호화하거나 암호 해독하지 않습니다.", ["Database"])
 
 	# ------------------------------------------------------------------------
 	#Find "SQLite Encryption Extension (SEE) on Android"
@@ -3040,26 +3040,26 @@ Proof-Of-Concept Reference:
 			break
 
 	if has_SSE_databases :
-		writer.startWriter("DB_SEE", LEVEL_NOTICE, "Android SQLite Databases Encryption (SQLite Encryption Extension (SEE))",
-			"This app is using SQLite Encryption Extension (SEE) on Android (http://www.sqlite.org/android) to encrypt or decrpyt databases.", ["Database"])
+		writer.startWriter("DB_SEE", LEVEL_NOTICE, "Android SQLite 데이터베이스 암호화 (SQLite Encryption Extension (SEE))",
+			"이 앱은 Android(http://www.sqlite.org/android)에서 SQLite Encryption Extension(SEE)을 사용하여 데이터베이스를 암호화하거나 암호 해독합니다.", ["Database"])
 	
 	else :
-		writer.startWriter("DB_SEE", LEVEL_INFO, "Android SQLite Databases Encryption (SQLite Encryption Extension (SEE))",
-			"This app is \"NOT\" using SQLite Encryption Extension (SEE) on Android (http://www.sqlite.org/android) to encrypt or decrpyt databases.", ["Database"])
+		writer.startWriter("DB_SEE", LEVEL_INFO, "Android SQLite 데이터베이스 암호화 (SQLite Encryption Extension (SEE))",
+			"이 앱은 Android(http://www.sqlite.org/android)에서 데이터베이스를 암호화하거나 암호 해독하기 위해 SQLite Encryption Extension(SEE)을 사용하지 않습니다.", ["Database"])
 
 	# ------------------------------------------------------------------------
 	#Searching SQLite "PRAGMA key" encryption:
 	result_sqlite_encryption = efficientStringSearchEngine.get_search_result_by_match_id("$__sqlite_encryption__")
 	result_sqlite_encryption = filteringEngine.filter_efficient_search_result_value(result_sqlite_encryption)
 	if result_sqlite_encryption :
-		writer.startWriter("HACKER_DB_KEY", LEVEL_NOTICE, "Key for Android SQLite Databases Encryption",
-			"Found using the symmetric key(PRAGMA key) to encrypt the SQLite databases. \nRelated code:", ["Database", "Hacker"])
+		writer.startWriter("HACKER_DB_KEY", LEVEL_NOTICE, "Android SQLite 데이터베이스 암호화용 키",
+			"SQLite 데이터베이스를 암호화하기 위해 대칭 키(PRAGMA 키)를 사용한 것을 찾았습니다", ["Database", "Hacker"])
 
 		for found_string, method in result_sqlite_encryption :
 			writer.write(method.get_class_name() + "->" + method.get_name() + method.get_descriptor())
 	else :
-		writer.startWriter("HACKER_DB_KEY", LEVEL_INFO, "Key for Android SQLite Databases Encryption",
-			"Did not find using the symmetric key(PRAGMA key) to encrypt the SQLite databases (It's still possible that it might use but we did not find out).", ["Database", "Hacker"])
+		writer.startWriter("HACKER_DB_KEY", LEVEL_INFO, "Android SQLite 데이터베이스 암호화용 키",
+			"SQLite 데이터베이스를 암호화하기 위해 대칭 키(PRAGMA 키)를 사용하는 것을 찾지 못했습니다(사용할 수도 있지만 찾지 못했습니다).", ["Database", "Hacker"])
 
 	# ------------------------------------------------------------------------
 	#Searching checking root or not:
@@ -3076,8 +3076,8 @@ Proof-Of-Concept Reference:
 	result_possibly_root_total = filteringEngine.filter_efficient_search_result_value(result_possibly_root_total)
 
 	if result_possibly_root_total :
-		writer.startWriter("COMMAND_MAYBE_SYSTEM", LEVEL_NOTICE, "Executing \"root\" or System Privilege Checking", 
-			"The app may has the code checking for \"root\" permission, mounting filesystem operations or monitoring system:", ["Command"])
+		writer.startWriter("COMMAND_MAYBE_SYSTEM", LEVEL_NOTICE, "\"root\" 또는 시스템 권한 실행 검사", 
+			"앱에는 \"root\" 권한, 마운트 파일 시스템 작업 또는 모니터링 시스템에 대한 코드 검사가 있을 수 있습니다.", ["Command"])
 
 		list_possible_root = []
 		list_possible_remount_fs = []
@@ -3103,8 +3103,8 @@ Proof-Of-Concept Reference:
 				writer.write(method.get_class_name() + "->" + method.get_name() + method.get_descriptor())
 	else :
 
-		writer.startWriter("COMMAND_MAYBE_SYSTEM", LEVEL_INFO, "Executing \"root\" or System Privilege Checking", 
-			"Did not find codes checking \"root\" permission(su) or getting system permission (It's still possible we did not find out).", ["Command"])
+		writer.startWriter("COMMAND_MAYBE_SYSTEM", LEVEL_INFO, "\"root\" 또는 시스템 권한 실행 검사", 
+			"\"root\" 권한(su)을 확인하거나 시스템 권한을 얻는 코드를 찾지 못했습니다(아직 찾지 못했을 가능성이 있음).", ["Command"])
 
 	# ------------------------------------------------------------------------
 	#Android getting IMEI, Android_ID, UUID problem
@@ -3114,22 +3114,22 @@ Proof-Of-Concept Reference:
 
 	if path_Device_id:
 
-		writer.startWriter("SENSITIVE_DEVICE_ID", LEVEL_WARNING, "Getting IMEI and Device ID", 
-			"""This app has code getting the "device id(IMEI)" but there are problems with this "TelephonyManager.getDeviceId()" approach.
-1.Non-phones: Wifi-only devices or music players that don't have telephony hardware just don't have this kind of unique identifier.
-2.Persistence: On devices which do have this, it persists across device data wipes and factory resets. It's not clear at all if, in this situation, your app should regard this as the same device.
-3.Privilege:It requires READ_PHONE_STATE permission, which is irritating if you don't otherwise use or need telephony.
-4.Bugs: We have seen a few instances of production phones for which the implementation is buggy and returns garbage, for example zeros or asterisks.
-If you want to get an unique id for the device, we suggest you use "Installation" framework in the following article.
-Please check the reference: http://android-developers.blogspot.tw/2011/03/identifying-app-installations.html
+		writer.startWriter("SENSITIVE_DEVICE_ID", LEVEL_WARNING, "IMEI 및 Device ID 가져오기", 
+			"""이 앱에는 "device ID(IMEI)"를 가져오는 코드가 있지만 이 "TelephonyManager.getDeviceId()" 접근 방식에는 문제가 있습니다.
+1. 비 전화: 전화 통신 하드웨어가 없는 Wi-Fi 전용 장치 또는 음악 플레이어에는 이러한 종류의 고유 식별자가 없습니다.
+2. 지속성: 이 기능이 있는 기기에서는 기기 데이터 삭제 및 공장 초기화 후에도 지속됩니다. 이 상황에서 앱이 이를 동일한 장치로 간주해야 하는지 여부는 전혀 명확하지 않습니다.
+3. 권한: READ_PHONE_STATE 권한이 필요합니다. 
+4. 버그: 구현에 버그가 있고 가비지(예: 0 또는 별표)를 반환하는 프로덕션 전화기의 몇 가지 인스턴스를 보았습니다.
+장치의 고유 ID를 얻으려면 다음 문서에서 "설치" 프레임워크를 사용하는 것이 좋습니다.
+참조: http://android-developers.blogspot.tw/2011/03/identifying-app-installations.html
 """, ["Sensitive_Information"])
 
 		writer.show_Paths(d, path_Device_id)
 
 	else:
 
-		writer.startWriter("SENSITIVE_DEVICE_ID", LEVEL_INFO, "Getting IMEI and Device ID", 
-			"Did not detect this app is getting the \"device id(IMEI)\" by \"TelephonyManager.getDeviceId()\" approach.", ["Sensitive_Information"])
+		writer.startWriter("SENSITIVE_DEVICE_ID", LEVEL_INFO, "IMEI 및 Device ID 가져오기", 
+			"이 앱이 \"TelephonyManager.getDeviceId()\" 접근 방식으로 \"Device ID(IMEI)\"를 가져오는 것을 감지하지 못했습니다.", ["Sensitive_Information"])
 
 	# ------------------------------------------------------------------------
 	#Android "android_id"
@@ -3145,20 +3145,20 @@ Please check the reference: http://android-developers.blogspot.tw/2011/03/identi
 			list_android_id.append(i.getPath())
 
 	if list_android_id:		
-		writer.startWriter("SENSITIVE_SECURE_ANDROID_ID", LEVEL_WARNING, "Getting ANDROID_ID", 
-			"""This app has code getting the 64-bit number "Settings.Secure.ANDROID_ID". 
-ANDROID_ID seems a good choice for a unique device identifier. There are downsides: First, it is not 100% reliable on releases of Android prior to 2.2 (Froyo). 
-Also, there has been at least one widely-observed bug in a popular handset from a major manufacturer, where every instance has the same ANDROID_ID. 
-If you want to get an unique id for the device, we suggest you use "Installation" framework in the following article. 
-Please check the reference: http://android-developers.blogspot.tw/2011/03/identifying-app-installations.html 
+		writer.startWriter("SENSITIVE_SECURE_ANDROID_ID", LEVEL_WARNING, "ANDROID_ID 가져오기", 
+			"""이 앱에는 64비트 숫자 "Settings.Secure.ANDROID_ID"를 가져오는 코드가 있습니다.
+ANDROID_ID는 고유한 기기 식별자에 적합합니다. 하지만 단점이 있습니다. 먼저 Android 2.2(Froyo) 이전 릴리스에서는 100% 신뢰할 수 없습니다.
+또한 모든 인스턴스에 동일한 ANDROID_ID가 있는 주요 개발업체의 인기 있는 handset에 널리 관찰된 버그가 하나 이상 있었습니다.
+장치의 고유 ID를 얻으려면 다음 문서에서 "Installation" 프레임워크를 사용하는 것이 좋습니다.
+참조: http://android-developers.blogspot.tw/2011/03/identifying-app-installations.html 
 """, ["Sensitive_Information"])
 
 		for path in list_android_id :
 			writer.show_Path(d, path)
 	else:
 
-		writer.startWriter("SENSITIVE_SECURE_ANDROID_ID", LEVEL_INFO, "Getting ANDROID_ID", 
-			"Did not detect this app is getting the 64-bit number \"Settings.Secure.ANDROID_ID\".", ["Sensitive_Information"])
+		writer.startWriter("SENSITIVE_SECURE_ANDROID_ID", LEVEL_INFO, "ANDROID_ID 가져오기", 
+			"이 앱이 64비트의 번호 \"Settings.Secure.ANDROID_ID\"를 가져오는 것을 감지하지 못했습니다.", ["Sensitive_Information"])
 
 	# ------------------------------------------------------------------------
 	#Checking sending SMS code
@@ -3180,12 +3180,12 @@ Please check the reference: http://android-developers.blogspot.tw/2011/03/identi
 	path_sms_sending = filteringEngine.filter_list_of_paths(d, path_sms_sending)
 
 	if path_sms_sending:
-		writer.startWriter("SENSITIVE_SMS", LEVEL_WARNING, "Codes for Sending SMS", 
-			"This app has code for sending SMS messages (sendDataMessage, sendMultipartTextMessage or sendTextMessage):")
+		writer.startWriter("SENSITIVE_SMS", LEVEL_WARNING, "SMS 전송 코드", 
+			"이 앱에는 SMS 메시지를 보내기 위한 코드가 있습니다. (sendDataMessage, sendMultipartTextMessage or sendTextMessage):")
 		writer.show_Paths(d, path_sms_sending)
 	else:
-		writer.startWriter("SENSITIVE_SMS", LEVEL_INFO, "Codes for Sending SMS", 
-			"Did not detect this app has code for sending SMS messages (sendDataMessage, sendMultipartTextMessage or sendTextMessage).")
+		writer.startWriter("SENSITIVE_SMS", LEVEL_INFO, "SMS 전송 코드", 
+			"이 앱에 SMS 메시지를 보내기 위한 코드가 있음을 감지하지 못했습니다. (sendDataMessage, sendMultipartTextMessage or sendTextMessage).")
 
 	# ------------------------------------------------------------------------
 	#Checking shared_user_id
@@ -3197,16 +3197,16 @@ Please check the reference: http://android-developers.blogspot.tw/2011/03/identi
 		sharedUserId_in_system = True
 		
 	if sharedUserId_in_system :
-		writer.startWriter("SHARED_USER_ID", LEVEL_NOTICE, "AndroidManifest sharedUserId Checking", 
-			"This app uses \"android.uid.system\" sharedUserId, which requires the \"system(uid=1000)\" permission. It must be signed with manufacturer's keystore or Google's keystore to be successfully installed on users' devices.", ["System"])
+		writer.startWriter("SHARED_USER_ID", LEVEL_NOTICE, "AndroidManifest sharedUserId 검사", 
+			"이 앱은 \"system(uid=1000)\" 권한이 필요한 \"android.uid.system\" sharedUserId를 사용합니다. 사용자의 기기에 성공적으로 설치하려면 개발업체의 키 저장소 또는 Google의 키 저장소로 서명해야 합니다.", ["System"])
 	else :
-		writer.startWriter("SHARED_USER_ID", LEVEL_INFO, "AndroidManifest sharedUserId Checking", 
-			"This app does not use \"android.uid.system\" sharedUserId.", ["System"])
+		writer.startWriter("SHARED_USER_ID", LEVEL_INFO, "AndroidManifest sharedUserId 검사", 
+			"이 앱은 \"android.uid.system\" sharedUserId를 사용하지 않습니다.", ["System"])
 
 	# System shared_user_id + Master Key Vulnerability checking: (Depends on "Master Key Vulnerability checking")
 	if sharedUserId_in_system and isMasterKeyVulnerability :
-		writer.startWriter("MASTER_KEY_SYSTEM_APP", LEVEL_CRITICAL, "Rooting System with Master Key Vulnerability", 
-			"This app is a malware, which requests \"system(uid=1000)\" privilege with Master Key vulnerability, leading the devices to be rooted.")
+		writer.startWriter("MASTER_KEY_SYSTEM_APP", LEVEL_CRITICAL, "Master Key 취약점이 있는 루팅 시스템", 
+			"이 앱은 Master Key 취약점이 있는 \"system(uid=1000)\" 권한을 요청하여 기기를 루팅시키는 악성코드가 있습니다.")
 
 	# ------------------------------------------------------------------------
 	#File delete alert
@@ -3215,14 +3215,14 @@ Please check the reference: http://android-developers.blogspot.tw/2011/03/identi
 	path_FileDelete = filteringEngine.filter_list_of_paths(d, path_FileDelete)
 
 	if path_FileDelete :
-		writer.startWriter("FILE_DELETE", LEVEL_NOTICE, "File Unsafe Delete Checking", 
-			"""Everything you delete may be recovered by any user or attacker, especially rooted devices.
-Please make sure do not use "file.delete()" to delete essential files.
-Check this video: https://www.youtube.com/watch?v=tGw1fxUD-uY""")
+		writer.startWriter("FILE_DELETE", LEVEL_NOTICE, "File Unsafe Delete 검사", 
+			"""삭제한 모든 항목은 사용자나 공격자, 특히 루팅된 기기에 의해 복구될 수 있습니다.
+필수 파일을 삭제하기 위해 "file.delete()"를 사용하지 마십시오.
+이 비디오를 확인하십시오: https://www.youtube.com/watch?v=tGw1fxUD-uY""")
 		writer.show_Paths(d, path_FileDelete)
 	else :
-		writer.startWriter("FILE_DELETE", LEVEL_INFO, "File Unsafe Delete Checking", 
-			"Did not detect that you are unsafely deleting files.")
+		writer.startWriter("FILE_DELETE", LEVEL_INFO, "File Unsafe Delete 검사", 
+			"파일을 안전하지 않게 삭제하고 있음을 감지하지 못했습니다.")
 
 	# ------------------------------------------------------------------------
 	#Check if app check for installing from Google Play
@@ -3231,12 +3231,12 @@ Check this video: https://www.youtube.com/watch?v=tGw1fxUD-uY""")
 	path_getInstallerPackageName = filteringEngine.filter_list_of_paths(d, path_getInstallerPackageName)
 
 	if path_getInstallerPackageName :
-		writer.startWriter("HACKER_INSTALL_SOURCE_CHECK", LEVEL_NOTICE, "APK Installing Source Checking", 
-			"This app has code checking APK installer sources(e.g. from Google Play, from Amazon, etc.). It might be used to check for whether the app is hacked by the attackers.", ["Hacker"])
+		writer.startWriter("HACKER_INSTALL_SOURCE_CHECK", LEVEL_NOTICE, "APK Installing Source 검사", 
+			"이 앱에는 코드 검사 APK 설치 프로그램 소스(예: Google Play, Amazon 등)가 있습니다. 앱이 공격자에 의해 해킹되었는지 확인하는 데 사용할 수 있습니다.", ["Hacker"])
 		writer.show_Paths(d, path_getInstallerPackageName)
 	else :
-		writer.startWriter("HACKER_INSTALL_SOURCE_CHECK", LEVEL_INFO, "APK Installing Source Checking", 
-			"Did not detect this app checks for APK installer sources.", ["Hacker"])
+		writer.startWriter("HACKER_INSTALL_SOURCE_CHECK", LEVEL_INFO, "APK Installing Source 검사", 
+			"이 앱이 APK 설치 프로그램 소스를 검사하는 것을 감지하지 못했습니다.", ["Hacker"])
 
 	# ------------------------------------------------------------------------
 	#WebView setAllowFileAccess:
@@ -3307,36 +3307,36 @@ Check this video: https://www.youtube.com/watch?v=tGw1fxUD-uY""")
 
 		path_setAllowFileAccess_confirm_vulnerable_src_class_func = sorted(set(path_setAllowFileAccess_confirm_vulnerable_src_class_func))
 
-		writer.startWriter("WEBVIEW_ALLOW_FILE_ACCESS", LEVEL_WARNING, "WebView Local File Access Attacks Checking", 
-			"""Found "setAllowFileAccess(true)" or not set(enabled by default) in WebView. The attackers could inject malicious script into WebView and exploit the opportunity to access local resources. This can be mitigated or prevented by disabling local file system access. (It is enabled by default)
-Note that this enables or disables file system access only. Assets and resources are still accessible using file:///android_asset and file:///android_res.
-The attackers can use "mWebView.loadUrl("file:///data/data/[Your_Package_Name]/[File]");" to access app's local file.
-Reference: (1)https://labs.mwrinfosecurity.com/blog/2012/04/23/adventures-with-android-webviews/
-           (2)http://developer.android.com/reference/android/webkit/WebSettings.html#setAllowFileAccess(boolean)
-Please add or modify "yourWebView.getSettings().setAllowFileAccess(false)" to your WebView:
+		writer.startWriter("WEBVIEW_ALLOW_FILE_ACCESS", LEVEL_WARNING, "WebView 로컬 파일 액세스 공격 검사", 
+			"""WebView에서 "setAllowFileAccess(true)"를 찾거나 설정되지 않았습니다(기본적으로 사용 가능). 공격자는 WebView에 악의적인 스크립트를 주입하고 로컬 리소스에 액세스할 수 있는 기회를 이용할 수 있습니다. 이 문제는 로컬 파일 시스템 액세스를 비활성화하여 완화하거나 방지할 수 있습니다. (기본적으로 사용 가능)
+이렇게 하면 파일 시스템 액세스만 활성화되거나 비활성화됩니다. 자산 및 리소스는 file:///android_asset 및 file:///android_res를 사용하여 계속 액세스할 수 있습니다.
+공격자는 "mWebView.loadUrl("file:///data/data/[Your_Package_Name]/[File]");"을 사용하여 앱의 로컬 파일에 액세스할 수 있습니다.
+참조: (1)https://labs.mwrinfosecurity.com/blog/2012/04/23/adventures-with-android-webviews/
+      (2)http://developer.android.com/reference/android/webkit/WebSettings.html#setAllowFileAccess(boolean)
+WebView에 "yourWebView.getSettings().setAllowFileAccess(false)"를 추가하거나 수정하십시오.:
 """, ["WebView"])
 		for i in path_setAllowFileAccess_confirm_vulnerable_src_class_func :
 			writer.write(i)
 
 	else :
-		writer.startWriter("WEBVIEW_ALLOW_FILE_ACCESS", LEVEL_INFO, "WebView Local File Access Attacks Checking", 
-			"Did not find potentially critical local file access settings.", ["WebView"])
+		writer.startWriter("WEBVIEW_ALLOW_FILE_ACCESS", LEVEL_INFO, "WebView 로컬 파일 액세스 공격 검사", 
+			"잠재적으로 중요한 로컬 파일 액세스 설정을 찾지 못했습니다.", ["WebView"])
 
 	# ------------------------------------------------------------------------
 	#Adb Backup check
 
 	if a.is_adb_backup_enabled() :
-		writer.startWriter("ALLOW_BACKUP", LEVEL_NOTICE, "AndroidManifest Adb Backup Checking", 
-			"""ADB Backup is ENABLED for this app (default: ENABLED). ADB Backup is a good tool for backing up all of your files. If it's open for this app, people who have your phone can copy all of the sensitive data for this app in your phone (Prerequisite: 1.Unlock phone's screen 2.Open the developer mode). The sensitive data may include lifetime access token, username or password, etc.
-Security case related to ADB Backup:
+		writer.startWriter("ALLOW_BACKUP", LEVEL_NOTICE, "AndroidManifest Adb Backup 검사", 
+			"""이 앱에 대해 ADB Backup이 활성화됩니다(기본값: 활성화됨). ADB Backup은 모든 파일을 Backup할 수 있는 좋은 도구입니다. 이 앱에 대해 열려 있는 경우 휴대전화를 가진 사람들이 휴대전화에서 이 앱에 대한 모든 민감한 데이터를 복사할 수 있습니다(전제 조건: 1.휴대전화 화면 잠금 해제 2. 개발자 모드를 엽니다). 민감한 데이터에는 평생 액세스 토큰, 사용자 이름 또는 비밀번호 등이 포함될 수 있습니다.
+ADB Backup 관련 보안 사례:
 1.http://www.securityfocus.com/archive/1/530288/30/0/threaded
 2.http://blog.c22.cc/advisories/cve-2013-5112-evernote-android-insecure-storage-of-pin-data-bypass-of-pin-protection/
 3.http://nelenkov.blogspot.co.uk/2012/06/unpacking-android-backups.html
-Reference: http://developer.android.com/guide/topics/manifest/application-element.html#allowbackup
+참조: http://developer.android.com/guide/topics/manifest/application-element.html#allowbackup
 """)
 	else :
-		writer.startWriter("ALLOW_BACKUP", LEVEL_INFO, "AndroidManifest Adb Backup Checking", 
-			"This app has disabled Adb Backup.")
+		writer.startWriter("ALLOW_BACKUP", LEVEL_INFO, "AndroidManifest Adb Backup 검사", 
+			"이 앱은 Adb Backup을 비활성화했습니다.")
 
 	# ------------------------------------------------------------------------
 	#SSL Verification Fail (To check whether the code verifies the certificate)
@@ -3366,11 +3366,11 @@ Reference: http://developer.android.com/guide/topics/manifest/application-elemen
 	if list_X509Certificate_Critical_class or list_X509Certificate_Warning_class :
 
 		log_level = LEVEL_WARNING
-		log_partial_prefix_msg = "Please make sure this app has the conditions to check the validation of SSL Certificate. If it's not properly checked, it MAY allows self-signed, expired or mismatch CN certificates for SSL connection."
+		log_partial_prefix_msg = "이 앱이 SSL 인증서의 유효성을 확인하는 조건이 있는지 확인하십시오. 제대로 확인하지 않으면 SSL 연결에 대해 자체 서명, 만료 또는 불일치 CN 인증서를 허용할 수 있습니다."
 
 		if list_X509Certificate_Critical_class :
 			log_level = LEVEL_CRITICAL
-			log_partial_prefix_msg = "This app DOES NOT check the validation of SSL Certificate. It allows self-signed, expired or mismatch CN certificates for SSL connection."
+			log_partial_prefix_msg = "이 앱은 SSL 인증서의 유효성을 확인하지 않습니다. SSL 연결을 위해 자체 서명, 만료 또는 불일치 CN 인증서를 허용합니다."
 
 		list_X509Certificate_merge_list = []
 		list_X509Certificate_merge_list.extend(list_X509Certificate_Critical_class)
@@ -3388,18 +3388,17 @@ Reference: http://developer.android.com/guide/topics/manifest/application-elemen
 
 						dict_X509Certificate_class_name_to_caller_mapping[referenced_class_name].append(method)
 
-		writer.startWriter("SSL_X509", log_level, "SSL Certificate Verification Checking", 
+		writer.startWriter("SSL_X509", log_level, "SSL 인증서 확인 검사", 
 			log_partial_prefix_msg + """
-This is a critical vulnerability and allows attackers to do MITM attacks without your knowledge.
-If you are transmitting users' username or password, these sensitive information may be leaking.
-Reference:
+이것은 critical한 취약점이며 공격자가 사용자 모르게 MITM 공격을 수행할 수 있도록 합니다
+사용자의 사용자 이름이나 비밀번호를 전송하는 경우 이러한 민감한 정보가 누출될 수 있습니다.
+참조:
 (1)OWASP Mobile Top 10 doc: https://www.owasp.org/index.php/Mobile_Top_10_2014-M3
 (2)Android Security book: http://goo.gl/BFb65r 
 (3)https://www.securecoding.cert.org/confluence/pages/viewpage.action?pageId=134807561
-This vulnerability is much more severe than Apple's "goto fail" vulnerability: http://goo.gl/eFlovw
-Please do not try to create a "X509Certificate" and override "checkClientTrusted", "checkServerTrusted", and "getAcceptedIssuers" functions with blank implementation.
-We strongly suggest you use the existing API instead of creating your own X509Certificate class. 
-Please modify or remove these vulnerable code: 
+"X509Certificate"를 생성하고 "checkClientTrusted", "checkServerTrusted" 및 "getAcceptedIssuers" 기능을 빈 구현으로 재정의하지 마십시오.
+자체 X509Certificate 클래스를 만드는 대신 기존 API를 사용하는 것이 좋습니다.
+이 취약한 코드를 수정하거나 제거하십시오: 
 """, ["SSL_Security"])
 		if list_X509Certificate_Critical_class :
 			writer.write("[Confirm Vulnerable]")
@@ -3419,8 +3418,8 @@ Please modify or remove these vulnerable code:
 						writer.write("      -> used by: " + used_method.get_class_name() + "->" + used_method.get_name() + used_method.get_descriptor())
 
 	else :
-		writer.startWriter("SSL_X509", LEVEL_INFO, "SSL Certificate Verification Checking", 
-				"Did not find vulnerable X509Certificate code.", ["SSL_Security"])
+		writer.startWriter("SSL_X509", LEVEL_INFO, "SSL 인증서 확인 검사", 
+				"취약한 X509Certificate 코드를 찾지 못했습니다.", ["SSL_Security"])
 
 	#----------------------------------------------------------------
 	#Must complete the last writer
@@ -3658,3 +3657,4 @@ if __name__ == "__main__":
 		org.json
 		org.xml
 """
+	
