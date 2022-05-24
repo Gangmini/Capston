@@ -1563,12 +1563,12 @@ You are now allowing minSdk버전을 8보다 낮은 버전을 사용하고 있�
 
 		list_base64_decoded_urls = {}
 
-		writer.startWriter("HACKER_BASE64_STRING_DECODE", LEVEL_CRITICAL, "Base64 String Encryption", "Found Base64 encoding \"String(s)\" (Total: " + str(len(organized_list_base64_success_decoded_string_to_original_mapping)) + "). We cannot guarantee all of the Strings are Base64 encoding and also we will not show you the decoded binary file:", ["Hacker"])
+		writer.startWriter("HACKER_BASE64_STRING_DECODE", LEVEL_CRITICAL, "Base64 문자열 인코딩", "Found Base64 인코딩 발견 \"String(s)\" (총: " + str(len(organized_list_base64_success_decoded_string_to_original_mapping)) + "). We cannot guarantee all of the Strings are Base64 encoding and also we will not show you the decoded binary file:", ["Hacker"])
 
 		for decoded_string, original_string, dict_class_to_method_mapping in organized_list_base64_success_decoded_string_to_original_mapping : 
 
 			writer.write(decoded_string)
-			writer.write("    ->Original Encoding String: " + original_string)
+			writer.write("    ->원본 인코딩 문자열: " + original_string)
 			
 			if dict_class_to_method_mapping :
 				for class_name, result_method_list in dict_class_to_method_mapping.items() :
@@ -1581,7 +1581,7 @@ You are now allowing minSdk버전을 8보다 낮은 버전을 사용하고 있�
 
 		if list_base64_decoded_urls :
 
-			writer.startWriter("HACKER_BASE64_URL_DECODE", LEVEL_CRITICAL, "Base64 String Encryption", "Base64 encoding \"HTTP URLs without SSL\" from all the Strings (Total: " + str(len(list_base64_decoded_urls)) + ")", ["SSL_Security", "Hacker"])
+			writer.startWriter("HACKER_BASE64_URL_DECODE", LEVEL_CRITICAL, "Base64 문자열 인코딩", "모든 문자열로 부터 Base64 인코딩 \"HTTP URLs without SSL\" (총: " + str(len(list_base64_decoded_urls)) + ")", ["SSL_Security", "Hacker"])
 
 			for decoded_string, original_string in list_base64_decoded_urls.items():
 
@@ -1591,7 +1591,7 @@ You are now allowing minSdk버전을 8보다 낮은 버전을 사용하고 있�
 					continue
 
 				writer.write(decoded_string)
-				writer.write("    ->Original Encoding String: " + original_string)
+				writer.write("    ->원본 인코딩 문자열: " + original_string)
 
 				if dict_class_to_method_mapping :
 					for class_name, result_method_list in dict_class_to_method_mapping.items() :
@@ -1600,7 +1600,7 @@ You are now allowing minSdk버전을 8보다 낮은 버전을 사용하고 있�
 							writer.write("    ->From class: " + source_classes_and_functions)
 
 	else:
-		writer.startWriter("HACKER_BASE64_STRING_DECODE", LEVEL_INFO, "Base64 String Encryption", "No encoded Base64 String or Urls found.", ["Hacker"])
+		writer.startWriter("HACKER_BASE64_STRING_DECODE", LEVEL_INFO, "Base64 문자열 인코딩", "인코딩된 Base64 문자열 또는 URL을 찾을 수 없습니다.", ["Hacker"])
 
 	# ------------------------------------------------------------------------
 	#WebView addJavascriptInterface checking:
@@ -1611,21 +1611,21 @@ You are now allowing minSdk버전을 8보다 낮은 버전을 사용하고 있�
 
 	if path_WebView_addJavascriptInterface:
 
-		output_string = """Found a critical WebView "addJavascriptInterface" vulnerability. This method can be used to allow JavaScript to control the host application. 
-This is a powerful feature, but also presents a security risk for applications targeted to API level JELLY_BEAN(4.2) or below, because JavaScript could use reflection to access an injected object's public fields. Use of this method in a WebView containing untrusted content could allow an attacker to manipulate the host application in unintended ways, executing Java code with the permissions of the host application. 
-Reference: 
+		output_string = """중요한 WebView "addJavascriptInterface"취약성을 찾았습니다. 이 메서드를 사용하여 JavaScript가 호스트 응용 프로그램을 제어할 수 있습니다. 
+이것은 강력한 기능이지만 자바스크립트가 삽입된 객체의 공개 필드에 접근하기 위해 반사를 사용할 수 있기 때문에 API 수준 JELLY_BEAN(4.2) 이하를 대상으로 하는 애플리케이션의 보안 위험도 있다. 신뢰할 수 없는 콘텐츠를 포함하는 WebView에서 이 메서드를 사용하면 공격자가 의도하지 않은 방법으로 호스트 응용 프로그램을 조작하여 호스트 응용 프로그램의 권한으로 Java 코드를 실행할 수 있습니다.
+참조: 
   1."http://developer.android.com/reference/android/webkit/WebView.html#addJavascriptInterface(java.lang.Object, java.lang.String) "
   2.https://labs.mwrinfosecurity.com/blog/2013/09/24/webview-addjavascriptinterface-remote-code-execution/
   3.http://50.56.33.56/blog/?p=314
   4.http://blog.trustlook.com/2013/09/04/alert-android-webview-addjavascriptinterface-code-execution-vulnerability/
-Please modify the below code:"""
+아래 코드를 수정해 주십시오.:"""
 
-		writer.startWriter("WEBVIEW_RCE", LEVEL_CRITICAL, "WebView RCE Vulnerability Checking", output_string, ["WebView", "Remote Code Execution"], "CVE-2013-4710")
+		writer.startWriter("WEBVIEW_RCE", LEVEL_CRITICAL, "WebView RCE 취약점 검사", output_string, ["WebView", "Remote Code Execution"], "CVE-2013-4710")
 		writer.show_Paths(d, path_WebView_addJavascriptInterface)
 
 	else:
 
-		writer.startWriter("WEBVIEW_RCE", LEVEL_INFO, "WebView RCE Vulnerability Checking", "WebView addJavascriptInterface vulnerabilities not found.", ["WebView", "Remote Code Execution"], "CVE-2013-4710")
+		writer.startWriter("WEBVIEW_RCE", LEVEL_INFO, "WebView RCE 취약점 검사", "WebView addJavascriptInterface 취약점을 찾을 수 없습니다.", ["WebView", "Remote Code Execution"], "CVE-2013-4710")
 
 	# ------------------------------------------------------------------------
 	#KeyStore null PWD checking:
@@ -1654,30 +1654,30 @@ Please modify the below code:"""
 
 	if (not list_no_pwd_keystore) and (not list_protected_keystore) and (not list_no_pwd_probably_ssl_pinning_keystore):
 
-		writer.startWriter("HACKER_KEYSTORE_NO_PWD", LEVEL_INFO, "KeyStore Protection Checking", 
-			"Ignore checking KeyStore protected by password or not because you're not using KeyStore.", ["KeyStore", "Hacker"])
+		writer.startWriter("HACKER_KEYSTORE_NO_PWD", LEVEL_INFO, "KeyStore 보호 검사", 
+			"키스토어를 사용하지 않기 때문에 암호로 보호되는 키스토어 확인을 무시하십시오.", ["KeyStore", "Hacker"])
 
 	else:
 		if list_no_pwd_probably_ssl_pinning_keystore:
 
-			writer.startWriter("HACKER_KEYSTORE_SSL_PINNING", LEVEL_CRITICAL, "KeyStore Protection Checking", 
-				"The Keystores below seem using \"byte array\" or \"hard-coded cert info\" to do SSL pinning (Total: " + str(len(list_no_pwd_probably_ssl_pinning_keystore)) + "). Please manually check:", ["KeyStore", "Hacker"])
+			writer.startWriter("HACKER_KEYSTORE_SSL_PINNING", LEVEL_CRITICAL, "KeyStore 보호 검사", 
+				"아래의 키 저장소는 SSL 고정 작업을 위해 \"byte array\" 또는 \"hard-coded cert info\"를 사용하는 것 같습니다. (총: " + str(len(list_no_pwd_probably_ssl_pinning_keystore)) + "). 수동으로 확인하십시오:", ["KeyStore", "Hacker"])
 
 			for keystore in list_no_pwd_probably_ssl_pinning_keystore:
 				writer.show_Path(d, keystore)
 
 		if list_no_pwd_keystore:
 
-			writer.startWriter("HACKER_KEYSTORE_NO_PWD", LEVEL_CRITICAL, "KeyStore Protection Checking", 
-				"The Keystores below seem \"NOT\" protected by password (Total: " + str(len(list_no_pwd_keystore)) + "). Please manually check:", ["KeyStore", "Hacker"])
+			writer.startWriter("HACKER_KEYSTORE_NO_PWD", LEVEL_CRITICAL, "KeyStore 보호 검사", 
+				"아래 키 저장소는 암호로 보호되는 \"NOT\"인 것 같습니다. (총: " + str(len(list_no_pwd_keystore)) + "). 수동으로 확인하십시오:", ["KeyStore", "Hacker"])
 
 			for keystore in list_no_pwd_keystore:
 				writer.show_Path(d, keystore)
 
 		if list_protected_keystore:
 			
-			writer.startWriter("HACKER_KEYSTORE_SSL_PINNING2", LEVEL_NOTICE, "KeyStore Protection Information", 
-				"The Keystores below are \"protected\" by password and seem using SSL-pinning (Total: " + str(len(list_protected_keystore)) + "). You can use \"Portecle\" tool to manage the certificates in the KeyStore:", ["KeyStore", "Hacker"])
+			writer.startWriter("HACKER_KEYSTORE_SSL_PINNING2", LEVEL_NOTICE, "KeyStore 보호 검사", 
+				"아래의 키 저장소는 암호로 \"protected\"되어 있으며 SSL-pinning을 사용하는 것 같습니다. (총: " + str(len(list_protected_keystore)) + "). \"Portecle\" 도구를 사용하여 KeyStore의 인증서를 관리할 수 있습니다:", ["KeyStore", "Hacker"])
 
 			for keystore in list_protected_keystore:
 				writer.show_Path(d, keystore)
@@ -1704,17 +1704,17 @@ Please modify the below code:"""
 
 	if list_keystore_file_name or list_possible_keystore_file_name :
 		if list_keystore_file_name :
-			writer.startWriter("HACKER_KEYSTORE_LOCATION1", LEVEL_NOTICE, "KeyStore File Location", "BKS Keystore file:", ["KeyStore", "Hacker"])
+			writer.startWriter("HACKER_KEYSTORE_LOCATION1", LEVEL_NOTICE, "KeyStore 파일 위치", "BKS Keystore 파일:", ["KeyStore", "Hacker"])
 			for i in list_keystore_file_name:
 				writer.write(i)
 
 		if list_possible_keystore_file_name:
-			writer.startWriter("HACKER_KEYSTORE_LOCATION2", LEVEL_NOTICE, "Possible KeyStore File Location", "BKS possible keystore file:", ["KeyStore", "Hacker"])
+			writer.startWriter("HACKER_KEYSTORE_LOCATION2", LEVEL_NOTICE, "가능성있는 KeyStore 파일 위치", "가능성있는 BKS keystore 파일:", ["KeyStore", "Hacker"])
 			for i in list_possible_keystore_file_name:
 				writer.write(i)
 	else :
-		writer.startWriter("HACKER_KEYSTORE_LOCATION1", LEVEL_INFO, "KeyStore File Location", 
-			"Did not find any possible BKS keystores or certificate keystore file (Notice: It does not mean this app does not use keysotre):", ["KeyStore", "Hacker"])
+		writer.startWriter("HACKER_KEYSTORE_LOCATION1", LEVEL_INFO, "KeyStore 파일 위치", 
+			"가능성있는 BKS 키 저장소 또는 인증서 키 저장소 파일을 찾지 못했습니다(알림: 이 앱이 keystore를 사용하지 않는 것은 아닙니다.):", ["KeyStore", "Hacker"])
 
 	# ------------------------------------------------------------------------
 	#BKS KeyStore checking:
@@ -1735,11 +1735,11 @@ Please modify the below code:"""
 			list_Non_BKS_keystore.append(i.getPath())
 
 	if list_Non_BKS_keystore:
-		writer.startWriter("KEYSTORE_TYPE_CHECK", LEVEL_CRITICAL, "KeyStore Type Checking", "Android only accept 'BKS' type KeyStore. Please confirm you are using 'BKS' type KeyStore:", ["KeyStore"])
+		writer.startWriter("KEYSTORE_TYPE_CHECK", LEVEL_CRITICAL, "KeyStore Type 검사", "Android는 'BKS' 유형 KeyStore만 허용합니다. 'BKS' 유형 키스토어를 사용하고 있는지 확인하십시오.:", ["KeyStore"])
 		for keystore in list_Non_BKS_keystore:
 			writer.show_Path(d, keystore)
 	else:
-		writer.startWriter("KEYSTORE_TYPE_CHECK", LEVEL_INFO, "KeyStore Type Checking", "KeyStore 'BKS' type check OK", ["KeyStore"])
+		writer.startWriter("KEYSTORE_TYPE_CHECK", LEVEL_INFO, "KeyStore Type 검사", "키 저장소 'BKS' type OK", ["KeyStore"])
 
 	# ------------------------------------------------------------------------
 	#Android PackageInfo signatures checking:
@@ -1764,12 +1764,12 @@ Please modify the below code:"""
 			list_PackageInfo_signatures.append(i.getPath())
 
 	if list_PackageInfo_signatures:
-		writer.startWriter("HACKER_SIGNATURE_CHECK", LEVEL_NOTICE, "Getting Signature Code Checking", 
-			"This app has code checking the package signature in the code. It might be used to check for whether the app is hacked by the attackers.", ["Signature", "Hacker"])
+		writer.startWriter("HACKER_SIGNATURE_CHECK", LEVEL_NOTICE, "서명 코드 가져오기 검사", 
+			"이 앱은 코드에 패키지 서명을 확인하는 코드가 있습니다. 공격자들에 의해 앱이 해킹당했는지 확인하기 위해 사용될 수 있습니다.", ["Signature", "Hacker"])
 		for signature in list_PackageInfo_signatures:
 			writer.show_Path(d, signature)
 	else:
-		writer.startWriter("HACKER_SIGNATURE_CHECK", LEVEL_INFO, "Getting Signature Code Checking", "Did not detect this app is checking the signature in the code.", ["Signature", "Hacker"])
+		writer.startWriter("HACKER_SIGNATURE_CHECK", LEVEL_INFO, "서명 코드 가져오기 검사", "이 앱이 코드에서 서명을 확인하는 것을 감지하지 못했습니다.", ["Signature", "Hacker"])
 
 	# ------------------------------------------------------------------------
 	#Developers preventing screenshot capturing checking:
@@ -1798,14 +1798,14 @@ Please modify the below code:"""
 			list_code_for_preventing_screen_capture.append(i.getPath())
 
 	if list_code_for_preventing_screen_capture:
-		writer.startWriter("HACKER_PREVENT_SCREENSHOT_CHECK", LEVEL_NOTICE, "Code Setting Preventing Screenshot Capturing", 
-			"""This app has code setting the preventing screenshot capturing.
-Example: getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
-It is used by the developers to protect the app:""", ["Hacker"])
+		writer.startWriter("HACKER_PREVENT_SCREENSHOT_CHECK", LEVEL_NOTICE, "스크린샷 캡처 방지", 
+			"""이 앱에는 캡처를 방지하는 코드가 설정되어 있습니다.
+예시: getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+개발자가 앱을 보호하기 위해 사용합니다.:""", ["Hacker"])
 		for interesting_code in list_code_for_preventing_screen_capture:
 			writer.show_Path(d, interesting_code)
 	else:
-		writer.startWriter("HACKER_PREVENT_SCREENSHOT_CHECK", LEVEL_INFO, "Code Setting Preventing Screenshot Capturing", "Did not detect this app has code setting preventing screenshot capturing.", ["Hacker"])
+		writer.startWriter("HACKER_PREVENT_SCREENSHOT_CHECK", LEVEL_INFO, "스크린샷 캡처 방지", "이 앱에 스크린샷 캡처를 차단하는 코드 설정이 있는지 탐지하지 못했습니다.", ["Hacker"])
 
 
 	# ------------------------------------------------------------------------
@@ -1892,24 +1892,23 @@ It is used by the developers to protect the app:""", ["Hacker"])
 
 	if list_HOSTNAME_INNER_VERIFIER :
 
-		output_string = """This app allows Self-defined HOSTNAME VERIFIER to accept all Common Names(CN). 
-This is a critical vulnerability and allows attackers to do MITM attacks with his valid certificate without your knowledge. 
-Case example: 
+		output_string = """이 앱을 사용하면 자체 정의 호스트 이름 확인기가 모든 Common Names(CN)을 수락할 수 있습니다. 
+이 취약성을 통해 공격자는 사용자가 모르게 유효한 인증서로 MITM 공격을 수행할 수 있습니다. 
+사례: 
 (1)http://osvdb.org/96411 
 (2)http://www.wooyun.org/bugs/wooyun-2010-042710 
 (3)http://www.wooyun.org/bugs/wooyun-2010-052339
-Also check Google doc: http://developer.android.com/training/articles/security-ssl.html (Caution: Replacing HostnameVerifier can be very dangerous). 
-OWASP Mobile Top 10 doc: https://www.owasp.org/index.php/Mobile_Top_10_2014-M3
-Check this book to see how to solve this issue: http://goo.gl/BFb65r 
+Google 문서: http://developer.android.com/training/articles/security-ssl.html (주의: HostnameVerifier를 교체하는 것은 매우 위험할 수 있습니다). 
+OWASP Mobile top 10개 문서: https://www.owasp.org/index.php/Mobile_Top_10_2014-M3
 
-To see what's the importance of Common Name(CN) verification.
-Use Google Chrome to navigate:
- - https://www.google.com   => SSL certificate is valid
- - https://60.199.175.158/  => This is the IP address of google.com, but the CN is not match, making the certificate invalid. You still can go Google.com but now you cannot distinguish attackers from normal users
+CN(Common Name) 인증의 중요도를 확인합니다.
+Google Chrome을 사용하여 탐색:
+ - https://www.google.com   => SSL 인증서가 유효함
+ - https://60.199.175.158/  => Google.com의 IP 주소이지만 CN이 일치하지 않아 인증서가 유효하지 않습니다. Google.com으로 이동할 수 있지만 공격자와 일반 사용자를 구분할 수 없습니다.
 
-Please check the code inside these methods:"""
+다음 메서드의 코드를 확인하십시오.:"""
 
-		writer.startWriter("SSL_CN1", LEVEL_CRITICAL, "SSL Implementation Checking (Verifying Host Name in Custom Classes)", output_string, ["SSL_Security"])
+		writer.startWriter("SSL_CN1", LEVEL_CRITICAL, "SSL 구현 검사(사용자 지정 클래스에서 호스트 이름 확인)", output_string, ["SSL_Security"])
 
 
 		for method in list_HOSTNAME_INNER_VERIFIER :
@@ -1920,7 +1919,7 @@ Please check the code inside these methods:"""
 			if method_class_name in dic_path_HOSTNAME_INNER_VERIFIER_new_instance:
 				writer.show_Paths(d, dic_path_HOSTNAME_INNER_VERIFIER_new_instance[method_class_name])
 	else :
-		writer.startWriter("SSL_CN1", LEVEL_INFO, "SSL Implementation Checking (Verifying Host Name in Custom Classes)", "Self-defined HOSTNAME VERIFIER checking OK.", ["SSL_Security"])
+		writer.startWriter("SSL_CN1", LEVEL_INFO, "SSL 구현 검사(사용자 지정 클래스에서 호스트  확인)", "자체 정의된 HOSTNAME VERIFIER 검사 확인.", ["SSL_Security"])
 
 
 	# (2)ALLOW_ALL_HOSTNAME_VERIFIER fields checking
@@ -1940,24 +1939,23 @@ Please check the code inside these methods:"""
 
 	if path_HOSTNAME_INNER_VERIFIER_new_instance or filtered_ALLOW_ALL_HOSTNAME_VERIFIER_paths :
 		
-		output_string = """This app does not check the validation of the CN(Common Name) of the SSL certificate ("ALLOW_ALL_HOSTNAME_VERIFIER" field or "AllowAllHostnameVerifier" class). 
-This is a critical vulnerability and allows attackers to do MITM attacks with his valid certificate without your knowledge. 
-Case example:
+		output_string = """이 앱을 사용하면 자체 정의 호스트 이름 확인기가 모든 Common Names(CN)을 수락할 수 있습니다. 
+이 취약성을 통해 공격자는 사용자가 모르게 유효한 인증서로 MITM 공격을 수행할 수 있습니다. 
+사례: 
 (1)http://osvdb.org/96411 
 (2)http://www.wooyun.org/bugs/wooyun-2010-042710 
 (3)http://www.wooyun.org/bugs/wooyun-2010-052339
-Also check Google doc: http://developer.android.com/training/articles/security-ssl.html (Caution: Replacing HostnameVerifier can be very dangerous).
-OWASP Mobile Top 10 doc: https://www.owasp.org/index.php/Mobile_Top_10_2014-M3
-Check this book to see how to solve this issue: http://goo.gl/BFb65r 
+Google 문서: http://developer.android.com/training/articles/security-ssl.html (주의: HostnameVerifier를 교체하는 것은 매우 위험할 수 있습니다). 
+OWASP Mobile top 10개 문서: https://www.owasp.org/index.php/Mobile_Top_10_2014-M3
 
-To see what's the importance of Common Name(CN) verification.
-Use Google Chrome to navigate:
- - https://www.google.com   => SSL certificate is valid
- - https://60.199.175.158/  => This is the IP address of google.com, but the CN is not match, making the certificate invalid. You still can go Google.com but now you cannot distinguish attackers from normal users
+CN(Common Name) 인증의 중요도를 확인합니다.
+Google Chrome을 사용하여 탐색:
+ - https://www.google.com   => SSL 인증서가 유효함
+ - https://60.199.175.158/  => Google.com의 IP 주소이지만 CN이 일치하지 않아 인증서가 유효하지 않습니다. Google.com으로 이동할 수 있지만 공격자와 일반 사용자를 구분할 수 없습니다.
 
-Please check the code inside these methods:"""
+다음 메서드의 코드를 확인하십시오.:"""
 
-		writer.startWriter("SSL_CN2", LEVEL_CRITICAL, "SSL Implementation Checking (Verifying Host Name in Fields)", output_string, ["SSL_Security"])
+		writer.startWriter("SSL_CN2", LEVEL_CRITICAL, "SSL 구현 검사(필드에서 호스트 이름 확인)", output_string, ["SSL_Security"])
 
 		if filtered_ALLOW_ALL_HOSTNAME_VERIFIER_paths :
 			"""
@@ -1978,7 +1976,7 @@ Please check the code inside these methods:"""
 			#For this one, the exclusion procedure is done on earlier
 			writer.show_Paths(d, path_HOSTNAME_INNER_VERIFIER_new_instance)
 	else :
-		writer.startWriter("SSL_CN2", LEVEL_INFO, "SSL Implementation Checking (Verifying Host Name in Fields)", "Critical vulnerability \"ALLOW_ALL_HOSTNAME_VERIFIER\" field setting or \"AllowAllHostnameVerifier\" class instance not found.", ["SSL_Security"])
+		writer.startWriter("SSL_CN2", LEVEL_INFO, "SSL 구현 검사(필드에서 호스트 이름 확인)", "심각한 취약성 \"ALLOW_ALL_HOSTNAME_VERIFFER\" 필드 설정 또는 \"AllowAllHostnameVerifier\" 클래스 인스턴스를 찾을 수 없습니다.", ["SSL_Security"])
 
 	# -------------------------------------------------------
 
@@ -1990,14 +1988,14 @@ Please check the code inside these methods:"""
 
 	if path_getInsecure:
 
-		output_string = """Sockets created using this factory(insecure method "getInsecure") are vulnerable to man-in-the-middle attacks. 
-Check the reference: http://developer.android.com/reference/android/net/SSLCertificateSocketFactory.html#getInsecure(int, android.net.SSLSessionCache). 
-Please remove the insecure code:"""
+		output_string = """이 팩토리를 사용하여 만든 소켓(안전하지 않은 메서드 "getInsecure")은 man-in-the-middle attacks에 취약합니다. 
+참조를 확인하십시오: http://developer.android.com/reference/android/net/SSLCertificateSocketFactory.html#getInsecure(int, android.net.SSLSessionCache). 
+안전하지 않은 코드를 제거하십시오.:"""
 
-		writer.startWriter("SSL_CN3", LEVEL_CRITICAL, "SSL Implementation Checking (Insecure component)", output_string, ["SSL_Security"])
+		writer.startWriter("SSL_CN3", LEVEL_CRITICAL, "SSL 구현 검사(필드에서 호스트 이름 확인)", output_string, ["SSL_Security"])
 		writer.show_Paths(d, path_getInsecure)
 	else:
-		writer.startWriter("SSL_CN3", LEVEL_INFO, "SSL Implementation Checking (Insecure component)", "Did not detect SSLSocketFactory by insecure method \"getInsecure\".", ["SSL_Security"])
+		writer.startWriter("SSL_CN3", LEVEL_INFO, "SSL 구현 검사(필드에서 호스트 이름 확인)", "안전하지 않은 메서드 \"getInsecure\"로 SSLocketFactory를 검색하지 못했습니다.", ["SSL_Security"])
 
 	# -------------------------------------------------------
 
@@ -2025,13 +2023,13 @@ Please remove the insecure code:"""
 			list_HttpHost_scheme_http.append(i.getPath())
 
 	if list_HttpHost_scheme_http:
-		writer.startWriter("SSL_DEFAULT_SCHEME_NAME", LEVEL_CRITICAL, "SSL Implementation Checking (HttpHost)", 
-			"This app uses \"HttpHost\", but the default scheme is \"http\" or \"HttpHost.DEFAULT_SCHEME_NAME(http)\". Please change to \"https\":", ["SSL_Security"])
+		writer.startWriter("SSL_DEFAULT_SCHEME_NAME", LEVEL_CRITICAL, "SSL 구현 검사(HttpHost)", 
+			"이 앱은 \"HttpHost\"를 사용하지만 기본 체계는 \"Http\" 또는 \"HttpHost\"입니다.DEFAULT_SCHEME_NAME(http)\"입니다. \"https\"로 변경하십시오.:", ["SSL_Security"])
 
 		for i in list_HttpHost_scheme_http:
 			writer.show_Path(d, i)
 	else:
-		writer.startWriter("SSL_DEFAULT_SCHEME_NAME", LEVEL_INFO, "SSL Implementation Checking (HttpHost)", "DEFAULT_SCHEME_NAME for HttpHost check: OK", ["SSL_Security"])
+		writer.startWriter("SSL_DEFAULT_SCHEME_NAME", LEVEL_INFO, "SSL 구현 검사(HttpHost)", "HttpHost위한 DEFAULT_SCHEME_NAME 검사: OK", ["SSL_Security"])
 
 	# ------------------------------------------------------------------------
 	#WebViewClient onReceivedSslError errors
@@ -2050,13 +2048,13 @@ Please remove the insecure code:"""
 	list_webviewClient = filteringEngine.filter_list_of_methods(list_webviewClient)
 
 	if list_webviewClient :
-		writer.startWriter("SSL_WEBVIEW", LEVEL_CRITICAL, "SSL Implementation Checking (WebViewClient for WebView)", 
-			"""DO NOT use "handler.proceed();" inside those methods in extended "WebViewClient", which allows the connection even if the SSL Certificate is invalid (MITM Vulnerability).
-References:
-(1)A View To A Kill: WebView Exploitation: https://www.iseclab.org/papers/webview_leet13.pdf 
-(2)OWASP Mobile Top 10 doc: https://www.owasp.org/index.php/Mobile_Top_10_2014-M3
+		writer.startWriter("SSL_WEBVIEW", LEVEL_CRITICAL, "SSL 구현 검사(WebView위한 WebViewClient)", 
+			"""SSL 인증서가 잘못된 경우에도 연결을 허용하는 확장 "WebViewClient"의 메서드 내에서 "handler.proceed(;)"를 사용하지 마십시오(MITM 취약성).
+참조:
+(1)WebView 공격: https://www.iseclab.org/papers/webview_leet13.pdf 
+(2)OWASP Mobile Top 10 문서: https://www.owasp.org/index.php/Mobile_Top_10_2014-M3
 (3)https://jira.appcelerator.org/browse/TIMOB-4488
-Vulnerable codes:
+취약한 코드:
 """, ["SSL_Security"])
 
 		for method in list_webviewClient :
@@ -2068,7 +2066,7 @@ Vulnerable codes:
 				writer.show_Paths(d, dic_webviewClient_new_instance[method_class_name])
 
 	else :
-		writer.startWriter("SSL_WEBVIEW", LEVEL_INFO, "SSL Implementation Checking (WebViewClient for WebView)", "Did not detect critical usage of \"WebViewClient\"(MITM Vulnerability).", ["SSL_Security"])
+		writer.startWriter("SSL_WEBVIEW", LEVEL_INFO, "SSL 구현 검사(WebView위한 WebViewClient)", "\"WebViewClient\"(MITM 취약성)의 중요한 사용을 탐지하지 못했습니다.", ["SSL_Security"])
 
 
 	# ------------------------------------------------------------------------
@@ -2096,12 +2094,12 @@ Vulnerable codes:
 			list_setJavaScriptEnabled_XSS.append(i.getPath())
 
 	if list_setJavaScriptEnabled_XSS:
-		writer.startWriter("WEBVIEW_JS_ENABLED", LEVEL_WARNING, "WebView Potential XSS Attacks Checking", 
-			"Found \"setJavaScriptEnabled(true)\" in WebView, which could exposed to potential XSS attacks. Please check the web page code carefully and sanitize the output:", ["WebView"])
+		writer.startWriter("WEBVIEW_JS_ENABLED", LEVEL_WARNING, "WebView XSS 공격 검사", 
+			"WebView에서 \"set JavaScriptEnabled(true)\"를 발견했으며 잠재적인 XSS 공격에 노출될 수 있습니다. 웹 페이지 코드를 주의 깊게 확인하고 출력을 삭제하십시오.", ["WebView"])
 		for i in list_setJavaScriptEnabled_XSS:
 			writer.show_Path(d, i)
 	else:
-		writer.startWriter("WEBVIEW_JS_ENABLED", LEVEL_INFO, "WebView Potential XSS Attacks Checking", "Did not detect \"setJavaScriptEnabled(true)\" in WebView.", ["WebView"])
+		writer.startWriter("WEBVIEW_JS_ENABLED", LEVEL_INFO, "WebView XSS 공격 검사", "WebView에서 \"set JavaScriptEnabled(true)\"를 검색하지 못했습니다.", ["WebView"])
 
 	# ------------------------------------------------------------------------
 	#HttpURLConnection bug checking:
@@ -2147,37 +2145,38 @@ Vulnerable codes:
 
 			if has_http_keepAlive_Name:
 				if has_http_keepAlive_Value:
-					writer.startWriter("HTTPURLCONNECTION_BUG", LEVEL_INFO, "HttpURLConnection Android Bug Checking", 
-						"System property \"http.keepAlive\" for \"HttpURLConnection\" sets correctly.")
+					writer.startWriter("HTTPURLCONNECTION_BUG", LEVEL_INFO, "HttpURLConnection Android 버그 검사", 
+						"시스템 속성 \"HttpURLConnection\"에 대한 \"http.keepAlive\"가 올바르게 설정되었습니다.")
 
 				else:
-					output_string = """You should set System property "http.keepAlive" to "false"
-You're using "HttpURLConnection". Prior to Android 2.2 (Froyo), "HttpURLConnection" had some frustrating bugs. 
-In particular, calling close() on a readable InputStream could poison the connection pool. Work around this by disabling connection pooling:
-Please check the reference:
+					output_string = """시스템 속성 "HttpURLConnection"를 설정해야 합니다."http.keepAlive"를 "false"으로 유지하다
+"HttpURLConnection"을 사용하고 있습니다. 안드로이드 2.2(Froyo) 이전 버전에는 버그가 몇 가지 있습니다. 
+특히 읽을 수 있는 InputStream에서 close()를 호출하면 연결 풀에 독이 발생할 수 있습니다. 연결 풀링을 사용하지 않도록 설정하여 이 문제를 해결하십시오.
+참조를 확인하십시오.:
  (1)http://developer.android.com/reference/java/net/HttpURLConnection.html
  (2)http://android-developers.blogspot.tw/2011/09/androids-http-clients.html"""
-					writer.startWriter("HTTPURLCONNECTION_BUG", LEVEL_NOTICE, "HttpURLConnection Android Bug Checking", output_string)
+					writer.startWriter("HTTPURLCONNECTION_BUG", LEVEL_NOTICE, "HttpURLConnection Android 버그 검사", output_string)
 
 					writer.show_Paths(d, list_pre_Froyo_HttpURLConnection)     #Notice: list_pre_Froyo_HttpURLConnection
 			else:
-				output_string = """You're using "HttpURLConnection". Prior to Android 2.2 (Froyo), "HttpURLConnection" had some frustrating bugs. 
-In particular, calling close() on a readable InputStream could poison the connection pool. Work around this by disabling connection pooling. 
-Please check the reference: 
+				output_string = """시스템 속성 "HttpURLConnection"를 설정해야 합니다."http.keepAlive"를 "false"으로 유지하다
+"HttpURLConnection"을 사용하고 있습니다. 안드로이드 2.2(Froyo) 이전 버전에는 버그가 몇 가지 있습니다. 
+특히 읽을 수 있는 InputStream에서 close()를 호출하면 연결 풀에 독이 발생할 수 있습니다. 연결 풀링을 사용하지 않도록 설정하여 이 문제를 해결하십시오.
+참조를 확인하십시오.: 
  (1)http://developer.android.com/reference/java/net/HttpURLConnection.html
  (2)http://android-developers.blogspot.tw/2011/09/androids-http-clients.html"""
 
-				writer.startWriter("HTTPURLCONNECTION_BUG", LEVEL_NOTICE, "HttpURLConnection Android Bug Checking", output_string)
+				writer.startWriter("HTTPURLCONNECTION_BUG", LEVEL_NOTICE, "HttpURLConnection Android 버그 검사", output_string)
 				#Make it optional to list library
 				writer.show_Paths(d, pkg_HttpURLConnection)   #Notice: pkg_HttpURLConnection
 
 		else:
-			writer.startWriter("HTTPURLCONNECTION_BUG", LEVEL_INFO, "HttpURLConnection Android Bug Checking", 
-						"Ignore checking \"http.keepAlive\" because you're not using \"HttpURLConnection\".")
+			writer.startWriter("HTTPURLCONNECTION_BUG", LEVEL_INFO, "HttpURLConnection Android 버그 검사", 
+						"\"HttpURLConnection\"를 사용하지 않기 떄문에 \"http.keepAlive\"검사를 무시합니다.")
 
 	else:
 		writer.startWriter("HTTPURLCONNECTION_BUG", LEVEL_INFO, "HttpURLConnection Android Bug Checking", 
-			"Ignore checking \"http.keepAlive\" because you're not using \"HttpURLConnection\" and min_Sdk > 8.")
+			"\"HttpURLConnection\"를 사용하지 않기 떄문에 \"http.keepAlive\"검사를 무시하고 Sdk의 8버전이상 입니다.")
 
 	# ------------------------------------------------------------------------
 	# SQLiteDatabase - beginTransactionNonExclusive() checking:
