@@ -1028,10 +1028,10 @@ def __analyze(writer, args) :
 	apk_Path = APK_FILE_NAME_STRING  # + ".apk"
 
 	if (".." in args.apk_file) :
-		raise ExpectedException("apk_file_name_slash_twodots_error", "APK file name should not contain slash(/) or two dots(..) (File: " + apk_Path + ").") 
+		raise ExpectedException("apk_file_name_slash_twodots_error", "APK 파일 이름에는 슬래시(/) 또는 두 개의 점(...)을 사용할 수 없습니다. (File: " + apk_Path + ").") 
 
 	if not os.path.isfile(apk_Path) :
-		raise ExpectedException("apk_file_not_exist", "APK file not exist (File: " + apk_Path + ").")
+		raise ExpectedException("apk_file_not_exist", "APK이 존재하지 않습니다. (File: " + apk_Path + ").")
 
 	if args.store_analysis_result_in_db :
 		try:
@@ -1066,7 +1066,7 @@ def __analyze(writer, args) :
 	package_name = a.get_package()
 
 	if isNullOrEmptyString(package_name, True) :
-		raise ExpectedException("package_name_empty", "Package name is empty (File: " + apk_Path + ").")
+		raise ExpectedException("package_name_empty", "Package이름이 존재하지 않습니다. (File: " + apk_Path + ").")
 
 	writer.writeInf("platform", "Android", "Platform")
 	writer.writeInf("package_name", str(package_name), "Package Name")
@@ -1087,7 +1087,7 @@ def __analyze(writer, args) :
 			writer.writeInf("package_version_code", a.get_androidversion_code(), "Package Version Code")
 
 	if len(a.get_dex()) == 0:
-		raise ExpectedException("classes_dex_not_in_apk", "Broken APK file. \"classes.dex\" file not found (File: " + apk_Path + ").")
+		raise ExpectedException("classes_dex_not_in_apk", "APK 파일이 손상되었습니다. \"filename.pilename\" 파일을 찾을 수 없습니다. (File: " + apk_Path + ").")
 
 	try:
 		str_min_sdk_version = a.get_min_sdk_version()
@@ -1222,7 +1222,7 @@ def __analyze(writer, args) :
 
 
 	if allurls_strip_non_duplicated_final_prerun_count != 0:
-		writer.startWriter("SSL_URLS_NOT_IN_HTTPS", LEVEL_CRITICAL, "SSL Connection Checking", "URLs that are NOT under SSL (Total:" + str(allurls_strip_non_duplicated_final_prerun_count) + "):", ["SSL_Security"])
+		writer.startWriter("SSL_URLS_NOT_IN_HTTPS", LEVEL_CRITICAL, "SSL Connection 검사", "SSL을 사용하지 않는 URLs입니다. (Total:" + str(allurls_strip_non_duplicated_final_prerun_count) + "):", ["SSL_Security"])
 		
 		for url in allurls_strip_non_duplicated_final :
 
@@ -1244,7 +1244,7 @@ def __analyze(writer, args) :
 				pass
 
 	else:
-		writer.startWriter("SSL_URLS_NOT_IN_HTTPS", LEVEL_INFO, "SSL Connection Checking", "Did not discover urls that are not under SSL (Notice: if you encrypt the url string, we can not discover that).", ["SSL_Security"])
+		writer.startWriter("SSL_URLS_NOT_IN_HTTPS", LEVEL_INFO, "SSL Connection 검사", "SSL을 사용하지 않는 URLs을 발견하지 못헀습니다. (알림: 만약 URL 문자열을 암호화했다면, 그것을 발견할 수 없습니다.).", ["SSL_Security"])
 		
 	#--------------------------------------------------------------------
 	
@@ -1269,11 +1269,11 @@ def __analyze(writer, args) :
 						list_security_related_methods.append(method)
 
 		if list_security_related_methods :
-			writer.startWriter("Security_Methods", LEVEL_NOTICE, "Security Methods Checking", "Find some security-related method names:")
+			writer.startWriter("Security_Methods", LEVEL_NOTICE, "Security Methods 검사", "보안 관련 메서드 이름 발견:")
 			for method in list_security_related_methods :
 				writer.write(method.get_class_name() + "->" + method.get_name() + method.get_descriptor())
 		else :
-			writer.startWriter("Security_Methods", LEVEL_INFO, "Security Methods Checking", "Did not detect method names containing security related string.")
+			writer.startWriter("Security_Methods", LEVEL_INFO, "Security Methods 검사", "보안 관련 문자열을 포함하는 메서드 이름을 검색하지 못했습니다.")
 			
 
 	#------------------------------------------------------------------------------------------------------
@@ -1289,12 +1289,12 @@ def __analyze(writer, args) :
 					list_security_related_classes.append(current_class)
 
 		if list_security_related_classes :
-			writer.startWriter("Security_Classes", LEVEL_NOTICE, "Security Classes Checking", "Find some security-related class names:")
+			writer.startWriter("Security_Classes", LEVEL_NOTICE, "Security Classes 검사", "보안 관련 클래스 이름 발견:")
 			
 			for current_class in list_security_related_classes :
 				writer.write(current_class.get_name())
 		else :
-			writer.startWriter("Security_Classes", LEVEL_INFO, "Security Classes Checking", "Did not detect class names containing security related string.")
+			writer.startWriter("Security_Classes", LEVEL_INFO, "Security Classes 검사", "보안 관련 문자열을 포함하는 클래스 이름을 검색하지 못했습니다.")
 			
 	#------------------------------------------------------------------------------------------------------
 
@@ -1310,9 +1310,9 @@ def __analyze(writer, args) :
 		isMasterKeyVulnerability = True
 		
 	if isMasterKeyVulnerability :
-		writer.startWriter("MASTER_KEY", LEVEL_CRITICAL, "Master Key Type I Vulnerability", "This APK is suffered from Master Key Type I Vulnerability.", None, "CVE-2013-4787")
+		writer.startWriter("MASTER_KEY", LEVEL_CRITICAL, "마스터 키 유형 I 취약성", "이 APK에는 마스터 키 유형 I 취약성이 있습니다.", None, "CVE-2013-4787")
 	else :
-		writer.startWriter("MASTER_KEY", LEVEL_INFO, "Master Key Type I Vulnerability", "No Master Key Type I Vulnerability in this APK.", None, "CVE-2013-4787")
+		writer.startWriter("MASTER_KEY", LEVEL_INFO, "마스터 키 유형 I 취약성", "이 APK에는 마스터 키 유형 I 취약성이 없습니다.", None, "CVE-2013-4787")
 
 	#------------------------------------------------------------------------------------------------------
 	# Certificate checking (Prerequisite: 1.directory name "tmp" available  2.keytool command is available)
@@ -1348,11 +1348,11 @@ def __analyze(writer, args) :
 
 	is_debug_open = a.is_debuggable()   #Check 'android:debuggable'
 	if is_debug_open:
-		writer.startWriter("DEBUGGABLE", LEVEL_CRITICAL, "Android Debug Mode Checking", 
-			"DEBUG mode is ON(android:debuggable=\"true\") in AndroidManifest.xml. This is very dangerous. The attackers will be able to sniffer the debug messages by Logcat. Please disable the DEBUG mode if it is a released application.", ["Debug"])
+		writer.startWriter("DEBUGGABLE", LEVEL_CRITICAL, "Android Debug Mode 검사", 
+			"AndroidManifest.xml에서 DEBUG 모드가 ON(android:debugable=\"true\")입니다. 이것은 매우 위험합니다. 공격자는 로그캣을 통해 디버그 메시지를 탐지할 수 있습니다. 릴리스된 응용 프로그램인 경우 DEBUG 모드를 비활성화하십시오.", ["Debug"])
 
 	else:
-		writer.startWriter("DEBUGGABLE", LEVEL_INFO, "Android Debug Mode Checking", "DEBUG mode is OFF(android:debuggable=\"false\") in AndroidManifest.xml.", ["Debug"])
+		writer.startWriter("DEBUGGABLE", LEVEL_INFO, "Android Debug Mode 검사", "AndroidManifest.xml에서 DEBUG 모드가 OFF(android:debugable=\"false\")입니다.", ["Debug"])
 
 	#------------------------------------------------------------------------------------------------------
 
@@ -1408,33 +1408,33 @@ def __analyze(writer, args) :
 					pass
 
 	if list_detected_FLAG_DEBUGGABLE_path :
-		writer.startWriter("HACKER_DEBUGGABLE_CHECK", LEVEL_NOTICE, "Codes for Checking Android Debug Mode", "Found codes for checking \"ApplicationInfo.FLAG_DEBUGGABLE\" in AndroidManifest.xml:", ["Debug", "Hacker"])
+		writer.startWriter("HACKER_DEBUGGABLE_CHECK", LEVEL_NOTICE, "Checking Android Debug Mode 검사를 위한 코드", "AndroidManifest.xml에서 \"ApplicationInfo.FLAG_DEBUGGABLE\" 검사하는 코드를 발견:", ["Debug", "Hacker"])
 
 		for path in list_detected_FLAG_DEBUGGABLE_path:
 			writer.show_single_PathVariable(d, path)
 	else:
-		writer.startWriter("HACKER_DEBUGGABLE_CHECK", LEVEL_INFO, "Codes for Checking Android Debug Mode", "Did not detect codes for checking \"ApplicationInfo.FLAG_DEBUGGABLE\" in AndroidManifest.xml.", ["Debug", "Hacker"])
+		writer.startWriter("HACKER_DEBUGGABLE_CHECK", LEVEL_INFO, "Checking Android Debug Mode 검사를 위한 코드", "AndroidManifest.xml에서 \"ApplicationInfo.FLAG_DEBUGGABLE\" 검사하는 코드를 발견하지 못했습니다.", ["Debug", "Hacker"])
 
 	#----------------------------------------------------------------------------------
 
 	ACCESS_MOCK_LOCATION = "android.permission.ACCESS_MOCK_LOCATION"
 	if ACCESS_MOCK_LOCATION in all_permissions:
-		writer.startWriter("USE_PERMISSION_ACCESS_MOCK_LOCATION", LEVEL_CRITICAL, "Unnecessary Permission Checking", "Permission 'android.permission.ACCESS_MOCK_LOCATION' only works in emulator environment. Please remove this permission if it is a released application.")
+		writer.startWriter("USE_PERMISSION_ACCESS_MOCK_LOCATION", LEVEL_CRITICAL, "불필요한 권한 검사", "권한 'android.permission.ACCESS_MOCK_LOCATION'은 에뮬레이터 환경에서만 작동합니다. 릴리스된 응용 프로그램인 경우 이 권한을 제거하십시오.")
 	else:
-		writer.startWriter("USE_PERMISSION_ACCESS_MOCK_LOCATION", LEVEL_INFO, "Unnecessary Permission Checking", "Permission 'android.permission.ACCESS_MOCK_LOCATION' sets correctly.")
+		writer.startWriter("USE_PERMISSION_ACCESS_MOCK_LOCATION", LEVEL_INFO, "불필요한 권한 검사", "권한 'android.permission.ACCESS_MOCK_LOCATION' 올바르게 설정되어 있습니다.")
 
 	#----------------------------------------------------------------------------------
 
 	permissionNameOfWrongPermissionGroup = a.get_permission_tag_wrong_settings_names()
 
 	if permissionNameOfWrongPermissionGroup:  #If the list is not empty
-		writer.startWriter("PERMISSION_GROUP_EMPTY_VALUE", LEVEL_CRITICAL, "AndroidManifest PermissionGroup Checking", 
-			"Setting the 'permissionGroup' attribute an empty value will make the permission definition become invalid and no other apps will be able to use the permission.")
+		writer.startWriter("PERMISSION_GROUP_EMPTY_VALUE", LEVEL_CRITICAL, "AndroidManifest 권한그룹 검사", 
+			"'permissionGroup' 속성을 빈 값으로 설정하면 권한 정의가 잘못되어 다른 앱에서 권한을 사용할 수 없게 됩니다.")
 
 		for name in permissionNameOfWrongPermissionGroup:
-			writer.write("Permission name '%s' sets an empty value in `permissionGroup` attribute." % (name))
+			writer.write("권한 이름 `permissionGroup` 속성에 있는 '%s'이 빈 값으로 설정되어 있습니다." % (name))
 	else:
-		writer.startWriter("PERMISSION_GROUP_EMPTY_VALUE", LEVEL_INFO, "AndroidManifest PermissionGroup Checking", "PermissionGroup in permission tag of AndroidManifest sets correctly.")
+		writer.startWriter("PERMISSION_GROUP_EMPTY_VALUE", LEVEL_INFO, "AndroidManifest 권한그룹 검사", "PermissionGroup in permission tag of AndroidManifest sets correctly.")
 
 	#----------------------------------------------------------------------------------
 
@@ -1453,18 +1453,18 @@ def __analyze(writer, args) :
 	
 	if list_user_permission_critical_manufacturer or list_user_permission_critical:
 		if list_user_permission_critical_manufacturer:
-			writer.startWriter("USE_PERMISSION_SYSTEM_APP", LEVEL_CRITICAL, "AndroidManifest System Use Permission Checking", "This app should only be released and signed by device manufacturer or Google and put under '/system/app'. If not, it may be a malicious app.")
+			writer.startWriter("USE_PERMISSION_SYSTEM_APP", LEVEL_CRITICAL, "AndroidManifest System 사용 권한 검사", "이 앱은 개발업체 또는 Google에서 릴리스하고 서명하며 '/system/app' 아래에 있어야 합니다. 그렇지 않으면 악성 앱일 수 있습니다.")
 
 			for permission in list_user_permission_critical_manufacturer:
 				writer.write("System use-permission found: \"" + permission + "\"")
 
 		if list_user_permission_critical:
-			writer.startWriter("USE_PERMISSION_CRITICAL", LEVEL_CRITICAL, "AndroidManifest Critical Use Permission Checking", "This app has very high privileges. Use it carefully.")
+			writer.startWriter("USE_PERMISSION_CRITICAL", LEVEL_CRITICAL, "AndroidManifest System 사용 권한 검사", "이 앱은 매우 높은 권한을 가지고 있습니다.")
 
 			for permission in list_user_permission_critical:
 				writer.write("Critical use-permission found: \"" + permission + "\"")
 	else :
-		writer.startWriter("USE_PERMISSION_SYSTEM_APP", LEVEL_INFO, "AndroidManifest System Use Permission Checking", "No system-level critical use-permission found.")
+		writer.startWriter("USE_PERMISSION_SYSTEM_APP", LEVEL_INFO, "AndroidManifest System 사용 권한 검사", "시스템의 중요한 사용 권한을 찾을 수 없습니다.")
 
 	#----------------------------------------------------------------------------------
 
@@ -1475,15 +1475,13 @@ def __analyze(writer, args) :
 
 	if isSuggestGCM :
 
-		output_string = """Your supporting minSdk is """ + str(int_min_sdk) + """
-You are now allowing minSdk to less than 8. Please check: http://developer.android.com/about/dashboards/index.html
-Google Cloud Messaging (Push Message) service only allows Android SDK >= 8 (Android 2.2). Pleae check: http://developer.android.com/google/gcm/gcm.html
-You may have the change to use GCM in the future, so please set minSdk to at least 9."""
-		writer.startWriter("MANIFEST_GCM", LEVEL_NOTICE, "Google Cloud Messaging Suggestion", output_string)
+		output_string = """minSdk의 버전: """ + str(int_min_sdk) + """
+You are now allowing minSdk버전을 8보다 낮은 버전을 사용하고 있습니다. Google 클라우드 메시징(푸시 메시지) 서비스는 Android SDK > = 8(Android 2.2)만 허용합니다. 참조: http://developer.android.com/about/dashboards/index.html."""
+		writer.startWriter("MANIFEST_GCM", LEVEL_NOTICE, "Google 클라우드 메세지 제안", output_string)
 
 	else :
 
-		writer.startWriter("MANIFEST_GCM", LEVEL_INFO, "Google Cloud Messaging Suggestion", "Nothing to suggest.")
+		writer.startWriter("MANIFEST_GCM", LEVEL_INFO, "Google 클라우드 메세지 제안", "제안사항이 없습니다.")
 
 	#------------------------------------------------------------------------------------------------------
 	#Find network methods:
@@ -1515,12 +1513,12 @@ You may have the change to use GCM in the future, so please set minSdk to at lea
 	if pkg_URLConnection or pkg_HttpURLConnection or pkg_HttpsURLConnection or pkg_DefaultHttpClient or pkg_HttpClient:
 
 		if "android.permission.INTERNET" in all_permissions:
-			writer.startWriter("USE_PERMISSION_INTERNET", LEVEL_INFO, "Accessing the Internet Checking", 
-						"This app is using the Internet via HTTP protocol.")
+			writer.startWriter("USE_PERMISSION_INTERNET", LEVEL_INFO, "인터넷 접근 검사", 
+						"이 앱은 HTTP 프로토콜을 통해 인터넷을 사용하고 있습니다.")
 
 		else:
-			writer.startWriter("USE_PERMISSION_INTERNET", LEVEL_CRITICAL, "Accessing the Internet Checking", 
-						"This app has some internet accessing codes but does not have 'android.permission.INTERNET' use-permission in AndroidManifest.")
+			writer.startWriter("USE_PERMISSION_INTERNET", LEVEL_CRITICAL, "인터넷 접근 검사", 
+						"이 앱에는 일부 인터넷 액세스 코드가 있지만 AndroidManifest안에 있는 'android.permission.INTERNET'이 설정되어 있지 않습니다.")
 
 		# if pkg_URLConnection:
 		# 	print("        =>URLConnection:")
@@ -1544,7 +1542,7 @@ You may have the change to use GCM in the future, so please set minSdk to at lea
 		# 	print
 
 	else:
-		writer.startWriter("USE_PERMISSION_INTERNET", LEVEL_INFO, "Accessing the Internet Checking", "No HTTP-related connection codes found.")
+		writer.startWriter("USE_PERMISSION_INTERNET", LEVEL_INFO, "인터넷 접근 검사", "HTTP 관련 연결 코드를 찾을 수 없습니다.")
 
 	# ------------------------------------------------------------------------
 
@@ -1835,17 +1833,17 @@ It is used by the developers to protect the app:""", ["Hacker"])
 			list_Runtime_exec.append(i.getPath())
 
 	if path_Runtime_exec:
-		writer.startWriter("COMMAND", LEVEL_CRITICAL, "Runtime Command Checking", "This app is using critical function 'Runtime.getRuntime().exec(\"...\")'.\nPlease confirm these following code secions are not harmful:", ["Command"])
+		writer.startWriter("COMMAND", LEVEL_CRITICAL, "Runtime exec 검사", "이 앱은 critical한 함수 'Runtime.getRuntime().exec(\"...\")'를 사용하고있습니다.\n다음 코드 세션이 유해하지 않은지 확인하십시오:", ["Command"])
 
 		writer.show_Paths(d, path_Runtime_exec)
 
 		if list_Runtime_exec :
-			writer.startWriter("COMMAND_SU", LEVEL_CRITICAL, "Runtime Critical Command Checking", "Requesting for \"root\" permission code sections 'Runtime.getRuntime().exec(\"su\")' found (Critical but maybe false positive):", ["Command"])
+			writer.startWriter("COMMAND_SU", LEVEL_CRITICAL, "Runtime Critical Command 검사", "\"root\" 권한 코드 섹션 'Runtime.getRuntime(.exec(\"su\")'에 대한 요청 중입니다:", ["Command"])
 
 			for path in list_Runtime_exec:
 				writer.show_Path(d, path)
 	else:
-		writer.startWriter("COMMAND", LEVEL_INFO, "Runtime Command Checking", "This app is not using critical function 'Runtime.getRuntime().exec(\"...\")'.", ["Command"])
+		writer.startWriter("COMMAND", LEVEL_INFO, "Runtime Command 검사", "이 앱은 critical한 함수 'Runtime.getRuntime().exec(\"...\")'를 사용하고 있지 않습니다.", ["Command"])
 
 	# -------------------------------------------------------
 
@@ -2972,15 +2970,15 @@ Reference: http://developer.android.com/guide/topics/manifest/intent-filter-elem
 
 	if list_implicit_service_components :
 		writer.startWriter("PERMISSION_IMPLICIT_SERVICE", LEVEL_CRITICAL, "Implicit Service Checking",
-			"""To ensure your app is secure, always use an explicit intent when starting a Service and DO NOT declare intent filters for your services. Using an implicit intent to start a service is a security hazard because you cannot be certain what service will respond to the intent, and the user cannot see which service starts. 
-Reference: http://developer.android.com/guide/components/intents-filters.html#Types""", ["Implicit_Intent"])
+			"""앱의 보안을 위해 서비스를 시작할 때 항상 명시적 의도를 사용하고 서비스에 대한 의도 필터를 선언하지 마십시오. 암묵적 의도를 사용하여 서비스를 시작하면 어떤 서비스가 의도에 응답할지 확신할 수 없고 사용자는 어떤 서비스가 시작되는지 볼 수 없기 때문에 보안 위험이 있습니다. 
+참조: http://developer.android.com/guide/components/intents-filters.html#Types""", ["Implicit_Intent"])
 
 		for name in list_implicit_service_components :
-			writer.write(("=> %s") % (a.format_value(name)))
+			writer.write(("=> %s를 확인하십시오.") % (a.format_value(name)))
 
 	else :
-		writer.startWriter("PERMISSION_IMPLICIT_SERVICE", LEVEL_INFO, "Implicit Service Checking",
-			"No dangerous implicit service.", ["Implicit_Intent"])
+		writer.startWriter("PERMISSION_IMPLICIT_SERVICE", LEVEL_INFO, "Implicit Service 검사",
+			"위험한 implicit service가 존재하지 않습니다.", ["Implicit_Intent"])
 
 	# ------------------------------------------------------------------------
 	#SQLite databases
